@@ -1,0 +1,12 @@
+com/ftc/boss/repository/SubmissionRepository.class
+com/ftc/boss/controller/ApiController.class
+com/ftc/boss/repository/UserRepository.class
+com/ftc/boss/BossFtcRdApplication.class
+com/ftc/boss/model/AppUser.class
+com/ftc/boss/model/ApiResult.class
+com/ftc/boss/service/SubmissionService.class
+com/ftc/boss/controller/UserController.class
+com/ftc/boss/model/Submission.class
+com/ftc/boss/controller/PageController.class
+com/ftc/boss/service/UserService.class
+com/ftc/boss/service/EmailService.class

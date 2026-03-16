@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel - Boss FTC RD</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Segoe UI',sans-serif;background:#08090f;color:#dde4f0;min-height:100vh;}
+header{display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:62px;border-bottom:1px solid #1e2840;background:#08090f;position:sticky;top:0;z-index:100;}
+.hlogo{font-weight:800;font-size:.95rem;}
+.hsub{font-size:.65rem;color:#5a6a8a;margin-top:1px;}
+.hright{display:flex;align-items:center;gap:9px;}
+.hbtn{background:#0f1117;border:1px solid #1e2840;border-radius:8px;padding:6px 13px;color:#dde4f0;text-decoration:none;font-size:.78rem;cursor:pointer;}
+.hbtn:hover{border-color:#4f7df3;color:#4f7df3;}
+.logout{background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.2);border-radius:8px;padding:6px 13px;color:#f87171;font-size:.78rem;cursor:pointer;}
+main{padding:26px 32px;max-width:1300px;margin:0 auto;}
+h1{font-weight:800;font-size:1.5rem;margin-bottom:4px;}
+.sub{color:#5a6a8a;font-size:.83rem;margin-bottom:20px;}
+.pills{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;}
+.pill{padding:7px 16px;border-radius:8px;border:1px solid #1e2840;cursor:pointer;font-size:.8rem;font-weight:700;color:#5a6a8a;transition:all .2s;}
+.pill.active,.pill:hover{border-color:#4f7df3;color:#4f7df3;background:rgba(79,125,243,.08);}
+.stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px;margin-bottom:20px;}
+.sc{background:#0f1117;border:1px solid #1e2840;border-radius:13px;padding:13px 11px;text-align:center;}
+.sn{font-weight:800;font-size:1.55rem;color:#4f7df3;}
+.sl{font-size:.66rem;color:#5a6a8a;margin-top:3px;}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+.fi{background:#0f1117;border:1px solid #1e2840;border-radius:8px;padding:8px 12px;color:#dde4f0;font-size:.82rem;outline:none;}
+.fi:focus{border-color:#4f7df3;}
+.fw{min-width:200px;} .fm{min-width:130px;} .fs{min-width:110px;}
+.fb{background:#161b27;border:1px solid #1e2840;border-radius:8px;padding:8px 14px;color:#5a6a8a;font-size:.78rem;cursor:pointer;}
+.fb:hover{border-color:#4f7df3;color:#4f7df3;}
+.tw{background:#0f1117;border:1px solid #1e2840;border-radius:14px;overflow:hidden;}
+table{width:100%;border-collapse:collapse;font-size:.77rem;}
+thead tr{background:#161b27;}
+th{padding:9px 12px;text-align:left;font-size:.61rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#5a6a8a;}
+td{padding:9px 12px;border-bottom:1px solid #1e2840;vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:rgba(79,125,243,.025);}
+.cat-badge{display:inline-block;padding:2px 7px;border-radius:20px;font-size:.63rem;font-weight:700;}
+.b-sci{background:rgba(34,211,238,.1);color:#22d3ee;border:1px solid rgba(34,211,238,.2);}
+.b-scopus,.b-wos{background:rgba(79,125,243,.1);color:#7aa3f8;border:1px solid rgba(79,125,243,.2);}
+.b-ieee{background:rgba(52,211,153,.1);color:#34d399;border:1px solid rgba(52,211,153,.2);}
+.b-conf{background:rgba(167,139,250,.1);color:#a78bfa;border:1px solid rgba(167,139,250,.2);}
+.b-patent{background:rgba(244,114,182,.1);color:#f472b6;border:1px solid rgba(244,114,182,.2);}
+.b-proj{background:rgba(251,146,60,.1);color:#fb923c;border:1px solid rgba(251,146,60,.2);}
+.b-book,.b-phd{background:rgba(52,211,153,.1);color:#34d399;border:1px solid rgba(52,211,153,.2);}
+.st-pending{background:rgba(245,197,66,.1);color:#f5c542;border:1px solid rgba(245,197,66,.2);padding:2px 7px;border-radius:20px;font-size:.62rem;font-weight:700;}
+.st-replied,.st-approved{background:rgba(52,211,153,.1);color:#34d399;border:1px solid rgba(52,211,153,.2);padding:2px 7px;border-radius:20px;font-size:.62rem;font-weight:700;}
+.st-rejected{background:rgba(248,113,113,.1);color:#f87171;border:1px solid rgba(248,113,113,.2);padding:2px 7px;border-radius:20px;font-size:.62rem;font-weight:700;}
+.amt{color:#f5c542;font-weight:700;}
+.reply-btn{background:linear-gradient(135deg,#4f7df3,#2563eb);border:none;border-radius:7px;padding:5px 11px;color:#fff;font-size:.72rem;font-weight:700;cursor:pointer;white-space:nowrap;}
+.reply-btn:hover{opacity:.85;}
+.file-btn{background:#161b27;border:1px solid #1e2840;border-radius:7px;padding:5px 10px;color:#5a6a8a;font-size:.72rem;cursor:pointer;white-space:nowrap;}
+.file-btn:hover{border-color:#4f7df3;color:#4f7df3;}
+.empty,.loading{text-align:center;padding:40px;color:#5a6a8a;font-size:.86rem;}
+.spin{display:inline-block;width:15px;height:15px;border:2px solid #1e2840;border-top-color:#4f7df3;border-radius:50%;animation:sp .7s linear infinite;margin-right:7px;vertical-align:middle;}
+@keyframes sp{to{transform:rotate(360deg);}}
+.foot{padding:9px 13px;font-size:.73rem;color:#5a6a8a;border-top:1px solid #1e2840;}
+.tdname{font-weight:600;} .tdmuted{color:#5a6a8a;font-size:.72rem;} .tdtitle{max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+/* Reply Modal */
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:500;display:none;align-items:center;justify-content:center;}
+.ov.open{display:flex;}
+.modal{background:#0f1117;border:1px solid #1e2840;border-radius:18px;padding:26px;width:100%;max-width:510px;margin:16px;}
+.modal-title{font-weight:800;font-size:1.05rem;margin-bottom:4px;}
+.modal-sub{font-size:.78rem;color:#5a6a8a;margin-bottom:14px;}
+.modal-info{background:#161b27;border-radius:9px;padding:12px;margin-bottom:14px;font-size:.79rem;line-height:1.75;}
+.ml{color:#5a6a8a;} .mv{color:#dde4f0;font-weight:500;}
+.modal label{display:block;font-size:.68rem;font-weight:700;color:#5a6a8a;letter-spacing:.09em;text-transform:uppercase;margin-bottom:5px;}
+.modal textarea{width:100%;background:#08090f;border:1px solid #1e2840;border-radius:9px;padding:10px 12px;color:#dde4f0;font-size:.85rem;outline:none;resize:vertical;min-height:100px;}
+.modal textarea:focus{border-color:#4f7df3;}
+.modal select{width:100%;background:#08090f;border:1px solid #1e2840;border-radius:9px;padding:10px 12px;color:#dde4f0;font-size:.85rem;outline:none;margin-top:10px;margin-bottom:12px;}
+.modal-msg{padding:8px 12px;border-radius:8px;font-size:.79rem;margin-top:8px;display:none;}
+.modal-msg.ok{background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.25);color:#34d399;}
+.modal-msg.er{background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.25);color:#f87171;}
+.modal-btns{display:flex;gap:9px;margin-top:14px;}
+.btn-send{flex:1;padding:11px;background:linear-gradient(135deg,#4f7df3,#2563eb);border:none;border-radius:9px;color:#fff;font-weight:700;font-size:.85rem;cursor:pointer;}
+.btn-send:hover{opacity:.9;} .btn-send:disabled{opacity:.5;cursor:not-allowed;}
+.btn-cancel{padding:11px 16px;background:#161b27;border:1px solid #1e2840;border-radius:9px;color:#5a6a8a;font-size:.85rem;cursor:pointer;}
+.btn-cancel:hover{border-color:#dde4f0;color:#dde4f0;}
+/* Users table */
+.utbl{width:100%;border-collapse:collapse;font-size:.78rem;}
+.utbl th{background:#161b27;padding:9px 12px;text-align:left;font-size:.61rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#5a6a8a;}
+.utbl td{padding:9px 12px;border-bottom:1px solid #1e2840;}
+.utbl tr:last-child td{border-bottom:none;}
+.role-student{background:rgba(79,125,243,.1);color:#7aa3f8;border:1px solid rgba(79,125,243,.2);padding:2px 7px;border-radius:20px;font-size:.62rem;font-weight:700;}
+.role-faculty{background:rgba(245,197,66,.1);color:#f5c542;border:1px solid rgba(245,197,66,.2);padding:2px 7px;border-radius:20px;font-size:.62rem;font-weight:700;}
+.role-management{background:rgba(167,139,250,.1);color:#a78bfa;border:1px solid rgba(167,139,250,.2);padding:2px 7px;border-radius:20px;font-size:.62rem;font-weight:700;}
+</style>
+</head>
+<body>
+
+<header>
+  <div><div class="hlogo">Boss FTC RD - Admin Dashboard</div><div class="hsub">Admin: shivankarvivek44@gmail.com</div></div>
+  <div class="hright">
+    <span id="hAdminName" style="font-size:.78rem;color:#5a6a8a;"></span>
+    <a href="/index.html" class="hbtn">Portal</a>
+    <button class="logout" onclick="doLogout()">Logout</button>
+  </div>
+</header>
+
+<main>
+  <h1>Admin Dashboard</h1>
+  <div class="sub">Review all submissions, send replies, manage users</div>
+
+  <div class="pills">
+    <div class="pill active" onclick="showSec('subs',this)">Submissions</div>
+    <div class="pill" onclick="showSec('users',this)">Registered Users</div>
+  </div>
+
+  <div class="stats" id="statsRow">
+    <div class="sc"><div class="sn" id="s-total">-</div><div class="sl">Total</div></div>
+    <div class="sc"><div class="sn" id="s-pending" style="color:#f5c542">-</div><div class="sl">Pending</div></div>
+    <div class="sc"><div class="sn" id="s-replied" style="color:#34d399">-</div><div class="sl">Replied</div></div>
+    <div class="sc"><div class="sn" id="s-sci" style="color:#22d3ee">-</div><div class="sl">SCI/SEI</div></div>
+    <div class="sc"><div class="sn" id="s-scopus" style="color:#7aa3f8">-</div><div class="sl">Scopus</div></div>
+    <div class="sc"><div class="sn" id="s-ieee" style="color:#34d399">-</div><div class="sl">IEEE</div></div>
+    <div class="sc"><div class="sn" id="s-proj" style="color:#fb923c">-</div><div class="sl">Project</div></div>
+    <div class="sc"><div class="sn" id="s-patent" style="color:#f472b6">-</div><div class="sl">Patent</div></div>
+    <div class="sc"><div class="sn" id="s-users" style="color:#4f7df3">-</div><div class="sl">Users</div></div>
+  </div>
+
+  <!-- SUBMISSIONS SECTION -->
+  <div id="sec-subs">
+    <div class="filters">
+      <input class="fi fw" type="text" id="qSearch" placeholder="Search name, email, title..." oninput="filterSubs()"/>
+      <select class="fi fm" id="qCat" onchange="filterSubs()">
+        <option value="">All Categories</option>
+        <option value="sci">SCI / SEI</option><option value="scopus">Scopus</option>
+        <option value="wos">Web of Science</option><option value="ieee">IEEE / ISTE</option>
+        <option value="conf">Conference</option><option value="patent">Patent</option>
+        <option value="proj">Project</option><option value="book">Book</option><option value="phd">Ph.D</option>
+      </select>
+      <select class="fi fs" id="qStatus" onchange="filterSubs()">
+        <option value="">All Status</option>
+        <option value="PENDING">Pending</option>
+        <option value="REPLIED">Replied</option>
+        <option value="APPROVED">Approved</option>
+        <option value="REJECTED">Rejected</option>
+      </select>
+      <button class="fb" onclick="loadAll()">&#8635; Refresh</button>
+    </div>
+    <div class="tw"><div id="subsArea"><div class="loading"><span class="spin"></span>Loading...</div></div></div>
+  </div>
+
+  <!-- USERS SECTION -->
+  <div id="sec-users" style="display:none">
+    <div class="tw"><div id="usersArea"><div class="loading"><span class="spin"></span>Loading users...</div></div></div>
+  </div>
+</main>
+
+<!-- REPLY MODAL -->
+<div class="ov" id="replyOv" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-title">Reply to Submission</div>
+    <div class="modal-sub">From: shivankarvivek44@gmail.com &#8594; User email</div>
+    <div class="modal-info" id="modalInfo"></div>
+    <label>Reply Message</label>
+    <textarea id="replyText" placeholder="Type your reply here...&#10;&#10;The auto-filled message below is a suggestion - you can edit it."></textarea>
+    <label style="margin-top:10px">Update Status</label>
+    <select id="replyStatus">
+      <option value="REPLIED">Replied</option>
+      <option value="APPROVED">Approved</option>
+      <option value="REJECTED">Rejected</option>
+    </select>
+    <div class="modal-msg" id="modalMsg"></div>
+    <div class="modal-btns">
+      <button class="btn-send" id="btnSend" onclick="sendReply()">&#9993; Send Reply Email</button>
+      <button class="btn-cancel" onclick="document.getElementById('replyOv').classList.remove('open')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+var allSubs=[], allUsers=[], curId=null;
+
+// Login guard
+(function(){
+  var s=sessionStorage.getItem('ftcUser');
+  if(!s){location.href='/login.html';return;}
+  try{ var u=JSON.parse(s); document.getElementById('hAdminName').textContent='Logged in: '+u.fullName; }catch(e){}
+})();
+
+function doLogout(){ sessionStorage.removeItem('ftcUser'); location.href='/login.html'; }
+
+function showSec(sec, el){
+  document.querySelectorAll('.pill').forEach(function(p){p.classList.remove('active');});
+  el.classList.add('active');
+  document.getElementById('sec-subs').style.display = sec==='subs' ? '' : 'none';
+  document.getElementById('sec-users').style.display = sec==='users' ? '' : 'none';
+  if(sec==='users') loadUsers();
+}
+
+async function loadAll(){
+  document.getElementById('subsArea').innerHTML='<div class="loading"><span class="spin"></span>Loading...</div>';
+  try{
+    var r1=await fetch('/api/submissions');
+    var r2=await fetch('/api/stats');
+    var j1=await r1.json(), j2=await r2.json();
+    if(j1.success){ allSubs=j1.data||[]; showStats(j2.data); renderSubs(allSubs); }
+    else document.getElementById('subsArea').innerHTML='<div class="empty">Error: '+j1.message+'</div>';
+  }catch(e){
+    document.getElementById('subsArea').innerHTML='<div class="empty">Cannot connect. Is MySQL running?<br><small>'+e.message+'</small></div>';
+  }
+}
+
+async function loadUsers(){
+  document.getElementById('usersArea').innerHTML='<div class="loading"><span class="spin"></span>Loading users...</div>';
+  try{
+    var r=await fetch('/api/auth/users');
+    var j=await r.json();
+    if(j.success){ allUsers=j.data||[]; renderUsers(allUsers); document.getElementById('s-users').textContent=allUsers.length; }
+    else document.getElementById('usersArea').innerHTML='<div class="empty">Error: '+j.message+'</div>';
+  }catch(e){
+    document.getElementById('usersArea').innerHTML='<div class="empty">Error: '+e.message+'</div>';
+  }
+}
+
+function showStats(s){
+  if(!s)return;
+  document.getElementById('s-total').textContent=s.total||0;
+  document.getElementById('s-pending').textContent=s.pending||0;
+  document.getElementById('s-replied').textContent=s.replied||0;
+  document.getElementById('s-sci').textContent=s.sci||0;
+  document.getElementById('s-scopus').textContent=s.scopus||0;
+  document.getElementById('s-ieee').textContent=s.ieee||0;
+  document.getElementById('s-proj').textContent=s.proj||0;
+  document.getElementById('s-patent').textContent=s.patent||0;
+}
+
+function stBadge(st){ var s=(st||'PENDING').toLowerCase(); return '<span class="st-'+s+'">'+(st||'PENDING')+'</span>'; }
+
+function renderSubs(data){
+  if(!data||!data.length){document.getElementById('subsArea').innerHTML='<div class="empty">No submissions yet.</div>';return;}
+  var rows='';
+  data.forEach(function(r){
+    var cat=r.category||'';
+    var dt=r.submittedAt?new Date(r.submittedAt).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}):'-';
+    var rwd=(r.rewardAmount>0)?'<span class="amt">Rs.'+Number(r.rewardAmount).toLocaleString()+'</span>':'-';
+    var title=r.paperTitle||'-'; if(title.length>26)title=title.substring(0,26)+'...';
+    var fileBtn=r.uploadedFile
+      ?'<button class="file-btn" onclick="window.open(\'/doc/'+r.uploadedFile+'\',\'_blank\')">View Doc</button>'
+      :'<span style="color:#5a6a8a;font-size:.7rem">No file</span>';
+    rows+='<tr>';
+    rows+='<td style="color:#5a6a8a">#'+r.id+'</td>';
+    rows+='<td><div class="tdname">'+(r.fullName||'-')+'</div><div class="tdmuted">'+(r.email||'')+'</div></td>';
+    rows+='<td><span class="cat-badge b-'+cat+'">'+(r.categoryName||cat)+'</span></td>';
+    rows+='<td class="tdtitle" title="'+(r.paperTitle||'')+'">'+title+'</td>';
+    rows+='<td>'+(r.department||'-')+'</td>';
+    rows+='<td>'+(r.authorType||'-')+'</td>';
+    rows+='<td>'+rwd+'</td>';
+    rows+='<td>'+stBadge(r.status)+'</td>';
+    rows+='<td style="color:#5a6a8a;font-size:.72rem;">'+dt+'</td>';
+    rows+='<td>'+fileBtn+'</td>';
+    rows+='<td><button class="reply-btn" onclick="openReply('+r.id+')">Reply</button></td>';
+    rows+='</tr>';
+  });
+  document.getElementById('subsArea').innerHTML=
+    '<table><thead><tr><th>#</th><th>Person</th><th>Category</th><th>Title</th><th>Dept</th><th>Author</th><th>Incentive</th><th>Status</th><th>Date</th><th>Document</th><th>Action</th></tr></thead><tbody>'+rows+'</tbody></table>'+
+    '<div class="foot">Total: <strong>'+data.length+'</strong> record(s)</div>';
+}
+
+function renderUsers(data){
+  if(!data||!data.length){document.getElementById('usersArea').innerHTML='<div class="empty">No registered users.</div>';return;}
+  var rows='';
+  data.forEach(function(u){
+    var roleClass='role-'+(u.role||'student').toLowerCase();
+    rows+='<tr>';
+    rows+='<td style="color:#5a6a8a">#'+u.id+'</td>';
+    rows+='<td class="tdname">'+(u.fullName||'-')+'</td>';
+    rows+='<td style="color:#5a6a8a;font-size:.74rem">'+(u.email||'-')+'</td>';
+    rows+='<td><span class="'+roleClass+'">'+(u.role||'STUDENT')+'</span></td>';
+    rows+='<td>'+(u.department||'-')+'</td>';
+    rows+='<td style="color:#5a6a8a;font-size:.72rem">'+(u.createdAt||'-')+'</td>';
+    rows+='</tr>';
+  });
+  document.getElementById('usersArea').innerHTML=
+    '<table class="utbl"><thead><tr><th>#</th><th>Name</th><th>Email</th><th>Role</th><th>Department</th><th>Registered</th></tr></thead><tbody>'+rows+'</tbody></table>'+
+    '<div class="foot">Total users: <strong>'+data.length+'</strong></div>';
+}
+
+function filterSubs(){
+  var q=document.getElementById('qSearch').value.toLowerCase();
+  var cat=document.getElementById('qCat').value;
+  var st=document.getElementById('qStatus').value;
+  renderSubs(allSubs.filter(function(r){
+    var mq=!q||(r.fullName||'').toLowerCase().includes(q)||(r.email||'').toLowerCase().includes(q)||(r.paperTitle||'').toLowerCase().includes(q);
+    var mc=!cat||r.category===cat;
+    var ms=!st||(r.status||'PENDING')===st;
+    return mq&&mc&&ms;
+  }));
+}
+
+function openReply(id){
+  var s=allSubs.find(function(x){return x.id===id;});
+  if(!s)return;
+  curId=id;
+  document.getElementById('modalInfo').innerHTML=
+    '<div><span class="ml">Name: </span><span class="mv">'+s.fullName+'</span></div>'+
+    '<div><span class="ml">Email: </span><span class="mv">'+s.email+'</span></div>'+
+    '<div><span class="ml">Title: </span><span class="mv">'+s.paperTitle+'</span></div>'+
+    '<div><span class="ml">Category: </span><span class="mv">'+s.categoryName+'</span></div>'+
+    (s.rewardAmount>0?'<div><span class="ml">Incentive: </span><span class="mv" style="color:#f5c542">Rs.'+s.rewardAmount+'</span></div>':'')+
+    (s.adminReply?'<div style="margin-top:6px;color:#f5c542;font-size:.72rem">Previously replied: '+s.adminReply+'</div>':'');
+
+  // Auto-fill a reply suggestion
+  var auto='Dear '+s.fullName+',\n\nThank you for submitting your research "'+s.paperTitle+'" under the '+s.categoryName+' category.\n\n';
+  if(s.rewardAmount>0) auto+='You are eligible for a research incentive of Rs.'+s.rewardAmount+' as per FTC R&D Policy. This will be processed after verification.\n\n';
+  auto+='The R&D Cell will contact you if additional documents are required.\n\nRegards,\nR&D Cell\nFabtech Technical Campus, Sangola';
+  document.getElementById('replyText').value=auto;
+  document.getElementById('replyStatus').value='REPLIED';
+  document.getElementById('modalMsg').style.display='none';
+  document.getElementById('replyOv').classList.add('open');
+}
+
+function closeModal(e){ if(e.target===document.getElementById('replyOv')) document.getElementById('replyOv').classList.remove('open'); }
+
+async function sendReply(){
+  var msg=document.getElementById('replyText').value.trim();
+  var status=document.getElementById('replyStatus').value;
+  if(!msg){showModalMsg('Reply message cannot be empty.',true);return;}
+  var btn=document.getElementById('btnSend');
+  btn.disabled=true; btn.textContent='Sending...';
+  try{
+    var fd=new FormData(); fd.append('replyMessage',msg); fd.append('status',status);
+    var r=await fetch('/api/admin/reply/'+curId,{method:'POST',body:fd});
+    var j=await r.json();
+    if(j.success){
+      showModalMsg('Reply sent successfully! Email dispatched to user.',false);
+      setTimeout(function(){document.getElementById('replyOv').classList.remove('open');loadAll();},1800);
+    } else { showModalMsg(j.message,true); }
+  }catch(e){ showModalMsg('Error: '+e.message,true); }
+  finally{ btn.disabled=false; btn.textContent='Send Reply Email'; }
+}
+
+function showModalMsg(t,e){
+  var el=document.getElementById('modalMsg');
+  el.textContent=t; el.className='modal-msg '+(e?'er':'ok'); el.style.display='block';
+}
+
+loadAll();
+</script>
+</body>
+</html>

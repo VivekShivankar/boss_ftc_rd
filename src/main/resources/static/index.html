@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FTC R&D Research Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&amp;family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&amp;display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#08090f;--surface:#0f1117;--surface2:#161b27;--border:#1e2840;
+  --accent:#4f7df3;--accent-glow:rgba(79,125,243,0.15);
+  --gold:#f5c542;--green:#34d399;--green-glow:rgba(52,211,153,0.12);
+  --red:#f87171;--purple:#a78bfa;--orange:#fb923c;--pink:#f472b6;
+  --cyan:#22d3ee;--text:#dde4f0;--muted:#5a6a8a;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;
+  background-image:linear-gradient(rgba(79,125,243,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(79,125,243,0.025) 1px,transparent 1px);
+  background-size:48px 48px;pointer-events:none;z-index:0;}
+.orb{position:fixed;border-radius:50%;filter:blur(140px);pointer-events:none;z-index:0;}
+.orb1{width:600px;height:600px;background:rgba(79,125,243,0.06);top:-200px;right:-100px;}
+.orb2{width:500px;height:500px;background:rgba(245,197,66,0.04);bottom:-150px;left:-100px;}
+.orb3{width:300px;height:300px;background:rgba(167,139,250,0.04);top:40%;left:30%;}
+header{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;
+  padding:0 48px;height:66px;border-bottom:1px solid var(--border);
+  backdrop-filter:blur(24px);background:rgba(8,9,15,0.85);}
+.logo{display:flex;align-items:center;gap:12px;text-decoration:none;}
+.logo-mark{width:38px;height:38px;background:linear-gradient(135deg,var(--accent),#2563eb);
+  border-radius:9px;display:flex;align-items:center;justify-content:center;
+  font-family:'Syne',sans-serif;font-weight:800;font-size:.8rem;color:#fff;
+  letter-spacing:.04em;box-shadow:0 4px 20px rgba(79,125,243,0.3);}
+.logo-text{font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;color:var(--text);}
+.logo-sub{font-size:.68rem;color:var(--muted);font-weight:300;letter-spacing:.14em;text-transform:uppercase;margin-top:1px;}
+.step-track{display:flex;align-items:center;gap:6px;}
+.s-dot{width:26px;height:26px;border-radius:50%;border:1.5px solid var(--border);
+  display:flex;align-items:center;justify-content:center;font-size:.65rem;
+  font-family:'Syne',sans-serif;font-weight:700;color:var(--muted);transition:all .3s;}
+.s-dot.active{border-color:var(--accent);color:var(--accent);background:var(--accent-glow);}
+.s-dot.done{border-color:var(--green);color:var(--green);background:var(--green-glow);}
+.s-line{width:20px;height:1px;background:var(--border);}
+.nav-tabs{position:relative;z-index:10;display:flex;border-bottom:1px solid var(--border);
+  padding:0 48px;background:rgba(8,9,15,.6);backdrop-filter:blur(10px);overflow-x:auto;}
+.nav-tab{padding:14px 20px;font-size:.8rem;font-weight:500;color:var(--muted);
+  cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all .2s;letter-spacing:.04em;}
+.nav-tab:hover{color:var(--text);}
+.nav-tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+main{position:relative;z-index:5;min-height:calc(100vh - 66px);padding:48px;max-width:1160px;margin:0 auto;}
+.screen{display:none;animation:fadeUp .35s ease;}
+.screen.active{display:block;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+.pg-title{font-family:'Syne',sans-serif;font-weight:800;font-size:2.2rem;line-height:1.15;margin-bottom:6px;
+  background:linear-gradient(130deg,#fff 35%,var(--accent));-webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;background-clip:text;}
+.pg-sub{color:var(--muted);font-size:.88rem;font-weight:300;margin-bottom:40px;letter-spacing:.02em;}
+.sec-label{font-family:'Syne',sans-serif;font-size:.68rem;font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--muted);
+  margin-bottom:18px;display:flex;align-items:center;gap:10px;}
+.sec-label::after{content:'';flex:1;height:1px;background:var(--border);}
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:12px;}
+.cat-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;
+  padding:22px 15px;cursor:pointer;transition:all .25s;text-align:center;position:relative;overflow:hidden;}
+.cat-card::after{content:'';position:absolute;inset:0;opacity:0;transition:opacity .3s;border-radius:inherit;}
+.cat-card:hover{transform:translateY(-4px);}
+.cat-card:hover::after{opacity:1;}
+.cat-card.sci{border-color:rgba(34,211,238,.2);}
+.cat-card.sci:hover{border-color:var(--cyan);}
+.cat-card.sci::after{background:linear-gradient(135deg,rgba(34,211,238,.1),transparent);}
+.cat-card.scopus:hover{border-color:#4f7df3;}.cat-card.scopus::after{background:linear-gradient(135deg,rgba(79,125,243,.09),transparent);}
+.cat-card.wos:hover{border-color:#f5c542;}.cat-card.wos::after{background:linear-gradient(135deg,rgba(245,197,66,.09),transparent);}
+.cat-card.ieee:hover{border-color:#34d399;}.cat-card.ieee::after{background:linear-gradient(135deg,rgba(52,211,153,.09),transparent);}
+.cat-card.conf:hover{border-color:#a78bfa;}.cat-card.conf::after{background:linear-gradient(135deg,rgba(167,139,250,.09),transparent);}
+.cat-card.patent:hover{border-color:#f472b6;}.cat-card.patent::after{background:linear-gradient(135deg,rgba(244,114,182,.09),transparent);}
+.cat-card.proj:hover{border-color:#fb923c;}.cat-card.proj::after{background:linear-gradient(135deg,rgba(251,146,60,.09),transparent);}
+.cat-card.book:hover{border-color:#34d399;}.cat-card.book::after{background:linear-gradient(135deg,rgba(52,211,153,.09),transparent);}
+.cat-card.phd:hover{border-color:#a78bfa;}.cat-card.phd::after{background:linear-gradient(135deg,rgba(167,139,250,.09),transparent);}
+.new-pill{display:inline-block;background:rgba(34,211,238,.15);color:var(--cyan);
+  border:1px solid rgba(34,211,238,.3);border-radius:20px;font-size:.58rem;
+  font-weight:700;padding:1px 7px;letter-spacing:.06em;margin-bottom:3px;}
+.cat-icon{font-size:1.8rem;margin-bottom:8px;display:block;position:relative;z-index:1;}
+.cat-name{font-family:'Syne',sans-serif;font-weight:700;font-size:.82rem;letter-spacing:.03em;position:relative;z-index:1;}
+.cat-desc{font-size:.67rem;color:var(--muted);margin-top:3px;font-weight:300;position:relative;z-index:1;}
+.cat-badge{display:inline-block;margin-top:7px;font-size:.61rem;padding:2px 7px;
+  border-radius:20px;font-weight:600;letter-spacing:.04em;position:relative;z-index:1;}
+.b-cyan{background:rgba(34,211,238,.1);color:var(--cyan);border:1px solid rgba(34,211,238,.2);}
+.b-blue{background:rgba(79,125,243,.12);color:#7aa3f8;border:1px solid rgba(79,125,243,.2);}
+.b-gold{background:rgba(245,197,66,.1);color:#f5c542;border:1px solid rgba(245,197,66,.2);}
+.b-green{background:rgba(52,211,153,.1);color:#34d399;border:1px solid rgba(52,211,153,.2);}
+.b-purple{background:rgba(167,139,250,.1);color:#a78bfa;border:1px solid rgba(167,139,250,.2);}
+.b-pink{background:rgba(244,114,182,.1);color:#f472b6;border:1px solid rgba(244,114,182,.2);}
+.b-orange{background:rgba(251,146,60,.1);color:#fb923c;border:1px solid rgba(251,146,60,.2);}
+.b-muted{background:rgba(90,106,138,.1);color:var(--muted);border:1px solid rgba(90,106,138,.2);}
+.author-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;}
+.author-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;
+  padding:26px 20px;cursor:pointer;transition:all .25s;}
+.author-card:hover{transform:translateY(-4px);border-color:var(--accent);background:var(--surface2);}
+.auth-num{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;line-height:1;margin-bottom:5px;}
+.auth-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;margin-bottom:4px;}
+.auth-note{font-size:.73rem;color:var(--muted);font-weight:300;margin-bottom:8px;line-height:1.5;}
+.coauth-picker{background:var(--surface2);border:1px solid var(--border);border-radius:16px;
+  padding:24px;margin-top:20px;display:none;}
+.coauth-picker.show{display:block;animation:fadeUp .25s ease;}
+.coauth-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;margin-bottom:5px;}
+.coauth-sub{font-size:.78rem;color:var(--muted);margin-bottom:16px;line-height:1.5;}
+.coauth-row{display:flex;align-items:center;gap:12px;}
+.coauth-label{font-size:.82rem;color:var(--muted);}
+.num-input{width:70px;background:var(--bg);border:1px solid var(--border);border-radius:8px;
+  padding:9px 12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.9rem;
+  outline:none;text-align:center;transition:border-color .2s;}
+.num-input:focus{border-color:var(--accent);}
+.coauth-result{background:var(--bg);border:1px solid var(--border);border-radius:10px;
+  padding:14px 16px;margin-top:14px;display:none;}
+.coauth-result.show{display:block;animation:fadeUp .2s ease;}
+.cr-each{font-family:'Syne',sans-serif;font-weight:800;font-size:1.5rem;color:var(--gold);}
+.cr-note{font-size:.74rem;color:var(--muted);margin-top:3px;}
+.btn-cc{margin-top:14px;padding:10px 22px;background:linear-gradient(135deg,var(--accent),#2563eb);
+  border:none;border-radius:9px;color:#fff;font-family:'Syne',sans-serif;font-weight:700;
+  font-size:.85rem;cursor:pointer;transition:all .2s;}
+.btn-cc:hover{box-shadow:0 8px 20px rgba(79,125,243,.3);}
+.proj-level-section{display:none;margin-bottom:20px;}
+.proj-level-section.show{display:block;animation:fadeUp .25s ease;}
+.proj-level-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:10px;margin-bottom:12px;}
+.plvl-btn{background:var(--bg);border:1px solid var(--border);border-radius:10px;
+  padding:13px 11px;cursor:pointer;transition:all .2s;text-align:center;font-family:'DM Sans',sans-serif;}
+.plvl-btn:hover,.plvl-btn.sel{border-color:var(--orange);background:rgba(251,146,60,.08);}
+.plvl-btn .pl-icon{font-size:1.3rem;margin-bottom:4px;}
+.plvl-btn .pl-name{font-family:'Syne',sans-serif;font-weight:700;font-size:.8rem;color:var(--text);}
+.plvl-btn .pl-prizes{font-size:.67rem;color:var(--muted);margin-top:3px;}
+.proj-rank-row{display:flex;gap:10px;flex-wrap:wrap;}
+.prank-btn{flex:1;min-width:80px;background:var(--bg);border:1px solid var(--border);
+  border-radius:9px;padding:11px;text-align:center;cursor:pointer;transition:all .2s;}
+.prank-btn:hover,.prank-btn.sel{border-color:var(--gold);background:rgba(245,197,66,.08);}
+.prank-btn .pr-r{font-family:'Syne',sans-serif;font-weight:800;font-size:1.15rem;color:var(--gold);}
+.prank-btn .pr-a{font-size:.72rem;color:var(--muted);margin-top:2px;}
+.prank-btn.sel .pr-a{color:var(--gold);}
+.form-wrap{display:grid;grid-template-columns:1fr 330px;gap:22px;align-items:start;}
+.form-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:32px;}
+.form-top{padding-bottom:18px;border-bottom:1px solid var(--border);margin-bottom:22px;}
+.form-top-title{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;margin-bottom:8px;}
+.tags{display:flex;gap:6px;flex-wrap:wrap;}
+.tag{display:inline-flex;align-items:center;border-radius:20px;padding:3px 10px;font-size:.71rem;font-weight:600;letter-spacing:.04em;}
+.fgroup{margin-bottom:18px;}
+label{display:block;font-size:.71rem;font-weight:600;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:7px;}
+input[type=text],input[type=email],select{width:100%;background:var(--bg);border:1px solid var(--border);
+  border-radius:10px;padding:12px 14px;color:var(--text);font-family:'DM Sans',sans-serif;
+  font-size:.88rem;outline:none;transition:border-color .2s,box-shadow .2s;-webkit-appearance:none;}
+input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(79,125,243,.1);}
+select option{background:var(--surface2);color:var(--text);}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.sub-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:18px;}
+.sub-btn{background:var(--bg);border:1px solid var(--border);border-radius:10px;
+  padding:11px 12px;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;}
+.sub-btn:hover,.sub-btn.sel{border-color:var(--accent);background:var(--accent-glow);color:var(--accent);}
+.sub-btn .si{font-size:.95rem;display:block;margin-bottom:3px;}
+.sub-btn .sn{font-weight:600;font-size:.77rem;}
+.sub-btn .sd{font-size:.65rem;color:var(--muted);margin-top:2px;}
+.sub-btn.sel .sd{color:rgba(79,125,243,.7);}
+.file-zone{border:1.5px dashed var(--border);border-radius:12px;padding:22px;
+  text-align:center;cursor:pointer;transition:all .25s;background:var(--bg);position:relative;}
+.file-zone:hover{border-color:var(--accent);background:var(--accent-glow);}
+.file-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.fz-icon{font-size:1.6rem;margin-bottom:5px;}
+.fz-text{font-size:.8rem;color:var(--muted);}
+.fz-text span{color:var(--accent);font-weight:500;}
+.fz-fmt{font-size:.67rem;color:var(--muted);margin-top:3px;opacity:.6;}
+.fz-sel{color:var(--green);font-size:.77rem;margin-top:5px;font-weight:500;}
+.policy-sidebar{background:var(--surface);border:1px solid var(--border);
+  border-radius:18px;padding:22px;position:sticky;top:90px;}
+.ps-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.73rem;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;gap:5px;}
+.ps-item{padding:9px 0;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:2px;}
+.ps-item:last-child{border-bottom:none;padding-bottom:0;}
+.ps-item-label{font-size:.69rem;color:var(--muted);font-weight:300;}
+.ps-item-val{font-size:.84rem;font-weight:600;color:var(--text);}
+.ps-item-val.gold{color:var(--gold);font-family:'Syne',sans-serif;}
+.ps-item-val.green{color:var(--green);}
+.ps-item-val.cyan{color:var(--cyan);}
+.ps-cond{margin-top:11px;background:var(--surface2);border-radius:9px;padding:10px 12px;
+  font-size:.7rem;color:var(--muted);line-height:1.6;border:1px solid var(--border);}
+.btn-submit{width:100%;padding:13px;background:linear-gradient(135deg,var(--accent),#2563eb);
+  border:none;border-radius:11px;color:#fff;font-family:'Syne',sans-serif;font-weight:700;
+  font-size:.88rem;letter-spacing:.05em;cursor:pointer;transition:all .25s;margin-top:6px;}
+.btn-submit:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(79,125,243,.3);}
+.btn-submit:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none;}
+.btn-back{display:inline-flex;align-items:center;gap:7px;background:transparent;
+  border:1px solid var(--border);border-radius:9px;color:var(--muted);
+  font-family:'DM Sans',sans-serif;font-size:.82rem;padding:7px 15px;cursor:pointer;transition:all .2s;margin-bottom:26px;}
+.btn-back:hover{border-color:var(--text);color:var(--text);}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);
+  border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.success-wrap{max-width:640px;}
+.success-card{background:var(--surface);border:1px solid rgba(52,211,153,.25);
+  border-radius:20px;padding:40px 36px;text-align:center;}
+.s-icon{width:66px;height:66px;border-radius:50%;background:rgba(52,211,153,.1);
+  border:2px solid rgba(52,211,153,.3);display:flex;align-items:center;justify-content:center;
+  font-size:1.7rem;margin:0 auto 15px;animation:popIn .5s cubic-bezier(.175,.885,.32,1.275);}
+@keyframes popIn{from{transform:scale(0);opacity:0;}to{transform:scale(1);opacity:1;}}
+.s-title{font-family:'Syne',sans-serif;font-weight:800;font-size:1.6rem;color:var(--green);margin-bottom:6px;}
+.s-sub{color:var(--muted);font-size:.86rem;font-weight:300;margin-bottom:24px;}
+.email-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;
+  padding:16px;text-align:left;margin-bottom:11px;font-size:.79rem;line-height:1.75;}
+.ec-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.66rem;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;display:flex;align-items:center;gap:5px;}
+.er{margin-bottom:3px;}
+.el{color:var(--muted);font-weight:300;}
+.ev{color:var(--text);font-weight:500;}
+.reward-box{background:linear-gradient(135deg,rgba(245,197,66,.07),rgba(245,197,66,.02));
+  border:1px solid rgba(245,197,66,.2);border-radius:12px;padding:14px 18px;
+  display:flex;align-items:center;gap:14px;margin:12px 0;text-align:left;}
+.rb-amt{font-family:'Syne',sans-serif;font-weight:800;font-size:1.5rem;color:var(--gold);line-height:1;}
+.rb-lbl{font-size:.74rem;color:var(--muted);margin-top:3px;}
+.btn-reset{display:inline-flex;align-items:center;gap:7px;background:var(--surface2);
+  border:1px solid var(--border);border-radius:10px;color:var(--text);
+  font-family:'Syne',sans-serif;font-weight:600;font-size:.82rem;padding:9px 20px;cursor:pointer;transition:all .2s;margin-top:7px;}
+.btn-reset:hover{border-color:var(--accent);color:var(--accent);}
+.policy-page{max-width:860px;}
+.policy-section{background:var(--surface);border:1px solid var(--border);border-radius:16px;margin-bottom:13px;overflow:hidden;}
+.ps-head{display:flex;align-items:center;justify-content:space-between;padding:16px 22px;cursor:pointer;transition:background .2s;}
+.ps-head:hover{background:var(--surface2);}
+.ps-head-left{display:flex;align-items:center;gap:11px;}
+.ps-head-icon{font-size:1.2rem;}
+.ps-head-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;}
+.ps-head-sub{font-size:.7rem;color:var(--muted);font-weight:300;margin-top:2px;}
+.ps-chevron{color:var(--muted);transition:transform .3s;font-size:.75rem;}
+.ps-chevron.open{transform:rotate(180deg);}
+.ps-body{display:none;padding:0 22px 20px;border-top:1px solid var(--border);}
+.ps-body.open{display:block;animation:fadeUp .25s ease;}
+.ps-table{width:100%;border-collapse:collapse;margin-top:12px;font-size:.79rem;}
+.ps-table th{text-align:left;padding:8px 11px;background:var(--surface2);color:var(--muted);font-size:.64rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;}
+.ps-table th:first-child{border-radius:7px 0 0 7px;}
+.ps-table th:last-child{border-radius:0 7px 7px 0;}
+.ps-table td{padding:9px 11px;border-bottom:1px solid var(--border);color:var(--text);}
+.ps-table tr:last-child td{border-bottom:none;}
+.ps-table td.amt{color:var(--gold);font-family:'Syne',sans-serif;font-weight:700;}
+.ps-table td.cond{color:var(--muted);font-size:.73rem;}
+.ps-table td.cyan{color:var(--cyan);font-family:'Syne',sans-serif;font-weight:700;}
+.policy-note{background:var(--surface2);border-radius:9px;padding:10px 13px;
+  font-size:.75rem;color:var(--muted);line-height:1.6;margin-top:11px;border-left:3px solid var(--accent);}
+.toast{position:fixed;bottom:26px;right:26px;background:var(--surface);border:1px solid var(--green);
+  border-radius:12px;padding:11px 17px;font-size:.8rem;color:var(--green);font-weight:500;
+  z-index:9999;transform:translateY(80px);opacity:0;transition:all .4s cubic-bezier(.175,.885,.32,1.275);
+  display:flex;align-items:center;gap:8px;max-width:320px;}
+.toast.show{transform:translateY(0);opacity:1;}
+.toast.err{border-color:var(--red);color:var(--red);}
+@media(max-width:900px){.form-wrap{grid-template-columns:1fr;}.policy-sidebar{position:static;}}
+@media(max-width:640px){
+  header{padding:0 20px;}.nav-tabs{padding:0 20px;}main{padding:26px 18px;}
+  .frow{grid-template-columns:1fr;}.form-card{padding:18px;}
+  .cat-grid{grid-template-columns:repeat(3,1fr);}.pg-title{font-size:1.65rem;}
+  .sub-grid{grid-template-columns:1fr;}
+}
+
+/* ===== FEATURE 4: User Profile Corner ===== */
+.prof-corner{position:fixed;top:12px;right:16px;z-index:500;}
+.prof-btn{width:40px;height:40px;border-radius:50%;border:2px solid #4f7df3;background:linear-gradient(135deg,#4f7df3,#2563eb);cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.9rem;color:#fff;box-shadow:0 4px 14px rgba(79,125,243,.4);overflow:hidden;transition:transform .2s;}
+.prof-btn:hover{transform:scale(1.08);}
+.prof-btn img{width:100%;height:100%;object-fit:cover;}
+.prof-drop{position:absolute;top:48px;right:0;background:#0f1117;border:1px solid #1e2840;border-radius:14px;padding:16px;min-width:210px;box-shadow:0 12px 40px rgba(0,0,0,.5);display:none;animation:fdUp .2s ease;}
+@keyframes fdUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+.prof-drop.open{display:block;}
+.pd-name{font-weight:800;font-size:.9rem;color:#dde4f0;margin-bottom:1px;}
+.pd-email{font-size:.7rem;color:#5a6a8a;margin-bottom:6px;word-break:break-all;}
+.pd-role{display:inline-block;background:rgba(79,125,243,.12);color:#4f7df3;border:1px solid rgba(79,125,243,.2);border-radius:20px;padding:2px 9px;font-size:.63rem;font-weight:700;margin-bottom:12px;}
+.pd-divider{height:1px;background:#1e2840;margin:8px 0;}
+.pd-photo-lbl{display:block;width:100%;padding:8px;background:#161b27;border:1px solid #1e2840;border-radius:8px;text-align:center;font-size:.75rem;color:#5a6a8a;cursor:pointer;margin-bottom:7px;transition:all .2s;}
+.pd-photo-lbl:hover{border-color:#4f7df3;color:#4f7df3;}
+.pd-photo-in{display:none;}
+.pd-photo-status{font-size:.7rem;text-align:center;display:none;margin-bottom:6px;}
+.pd-photo-status.ok{color:#34d399;} .pd-photo-status.er{color:#f87171;}
+.pd-subs-btn{width:100%;padding:8px;background:rgba(79,125,243,.1);border:1px solid rgba(79,125,243,.2);border-radius:8px;color:#4f7df3;font-size:.76rem;cursor:pointer;margin-bottom:6px;transition:background .2s;}
+.pd-subs-btn:hover{background:rgba(79,125,243,.18);}
+.pd-logout-btn{width:100%;padding:8px;background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.2);border-radius:8px;color:#f87171;font-size:.76rem;cursor:pointer;transition:background .2s;}
+.pd-logout-btn:hover{background:rgba(248,113,113,.15);}
+/* Submissions modal */
+.subs-ov{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:600;display:none;align-items:center;justify-content:center;}
+.subs-ov.open{display:flex;}
+.subs-modal{background:#0f1117;border:1px solid #1e2840;border-radius:18px;padding:24px;width:100%;max-width:580px;margin:16px;max-height:80vh;overflow-y:auto;}
+.subs-title{font-weight:800;font-size:1.05rem;margin-bottom:4px;}
+.subs-count{font-size:.78rem;color:#5a6a8a;margin-bottom:16px;}
+.sub-item{background:#161b27;border:1px solid #1e2840;border-radius:10px;padding:13px;margin-bottom:9px;}
+.si-title{font-weight:600;font-size:.86rem;margin-bottom:5px;}
+.si-row{font-size:.74rem;color:#5a6a8a;margin-top:3px;} .si-row span{color:#dde4f0;}
+.si-reply{background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.2);border-radius:7px;padding:8px 10px;margin-top:8px;font-size:.74rem;color:#34d399;}
+.si-pending{color:#f5c542;} .si-replied,.si-approved{color:#34d399;} .si-rejected{color:#f87171;}
+.subs-close{width:100%;padding:9px;margin-top:10px;background:#161b27;border:1px solid #1e2840;border-radius:9px;color:#5a6a8a;font-size:.82rem;cursor:pointer;}
+.subs-close:hover{border-color:#4f7df3;color:#4f7df3;}
+main{padding-bottom:20px;}
+/* ===== END Profile Corner ===== */
+
+</style>
+</head>
+<body>
+<div class="orb orb1"></div><div class="orb orb2"></div><div class="orb orb3"></div>
+
+<div class="prof-corner" id="profCorner">
+  <div id="profBtn" class="prof-btn" onclick="toggleDrop()"><span id="profInitial">?</span></div>
+  <div class="prof-drop" id="profDrop">
+    <div class="pd-name" id="pdName"></div>
+    <div class="pd-email" id="pdEmail"></div>
+    <div class="pd-role" id="pdRole"></div>
+    <label class="pd-photo-lbl" for="photoIn">&#128247; Change Profile Photo</label>
+    <input class="pd-photo-in" type="file" id="photoIn" accept=".jpg,.jpeg,.png,.gif" onchange="doPhotoUpload(this)"/>
+    <div class="pd-photo-status" id="photoStatus"></div>
+    <div class="pd-divider"></div>
+    <button class="pd-subs-btn" onclick="openSubs()">&#128196; My Submissions</button>
+    <button class="pd-logout-btn" onclick="doLogout()">&#10006; Logout</button>
+  </div>
+</div>
+<div class="subs-ov" id="subsOv" onclick="closeSubsOv(event)">
+  <div class="subs-modal">
+    <div class="subs-title">My Submissions</div>
+    <div class="subs-count" id="subsCount"></div>
+    <div id="subsBody"></div>
+    <button class="subs-close" onclick="document.getElementById('subsOv').classList.remove('open')">Close</button>
+  </div>
+</div>
+
+<header>
+  <a class="logo" href="#">
+    <div class="logo-mark">FTC</div>
+    <div><div class="logo-text">R&D Portal</div><div class="logo-sub">Fabtech Technical Campus</div></div>
+  </a>
+  <div class="step-track" id="stepTrack">
+    <div class="s-dot active" id="sd1">1</div><div class="s-line"></div>
+    <div class="s-dot" id="sd2">2</div><div class="s-line"></div>
+    <div class="s-dot" id="sd3">3</div><div class="s-line"></div>
+    <div class="s-dot" id="sd4">&#10003;</div>
+  </div>
+</header>
+
+<div class="nav-tabs">
+  <div class="nav-tab active" onclick="switchTab('submit',this)">&#128228; Submit Research</div>
+  <div class="nav-tab" onclick="switchTab('policy',this)">&#128203; R&D Policies</div>
+  <div class="nav-tab" onclick="window.location.href='/admin'">&#9879; Admin Panel</div>
+</div>
+
+<main>
+<div id="tab-submit">
+
+<div class="screen active" id="sc1">
+  <div class="pg-title">Submit Research</div>
+  <div class="pg-sub">Select your research category &#8212; 9 types supported</div>
+  <div class="sec-label">Choose a Category</div>
+  <div class="cat-grid">
+    <div class="cat-card sci" onclick="pickCat('sci','SCI / SEI')">
+      <div class="new-pill">NEW</div>
+      <span class="cat-icon">&#128187;</span>
+      <div class="cat-name">SCI / SEI</div>
+      <div class="cat-desc">Software Eng. Institute</div>
+      <span class="cat-badge b-cyan">Up to &#8377;7,000</span>
+    </div>
+    <div class="cat-card scopus" onclick="pickCat('scopus','Scopus / Web of Science')">
+      <span class="cat-icon">&#128216;</span>
+      <div class="cat-name">Scopus</div>
+      <div class="cat-desc">Indexed Journal</div>
+      <span class="cat-badge b-blue">Up to &#8377;5,000</span>
+    </div>
+    <div class="cat-card wos" onclick="pickCat('wos','Web of Science')">
+      <span class="cat-icon">&#128300;</span>
+      <div class="cat-name">Web of Science</div>
+      <div class="cat-desc">WoS Indexed</div>
+      <span class="cat-badge b-gold">Up to &#8377;5,000</span>
+    </div>
+    <div class="cat-card ieee" onclick="pickCat('ieee','IEEE / ISTE / IEI / ACM')">
+      <span class="cat-icon">&#9889;</span>
+      <div class="cat-name">IEEE / ISTE</div>
+      <div class="cat-desc">Standard Journal</div>
+      <span class="cat-badge b-green">Up to &#8377;3,000</span>
+    </div>
+    <div class="cat-card conf" onclick="pickCat('conf','Conference')">
+      <span class="cat-icon">&#127908;</span>
+      <div class="cat-name">Conference</div>
+      <div class="cat-desc">Paper Presentation</div>
+      <span class="cat-badge b-purple">50% Reg + Travel</span>
+    </div>
+    <div class="cat-card patent" onclick="pickCat('patent','Patent / IPR')">
+      <span class="cat-icon">&#128220;</span>
+      <div class="cat-name">Patent / IPR</div>
+      <div class="cat-desc">IP Registration</div>
+      <span class="cat-badge b-pink">Up to &#8377;75,000</span>
+    </div>
+    <div class="cat-card proj" onclick="pickCat('proj','Research Project / Competition')">
+      <span class="cat-icon">&#128640;</span>
+      <div class="cat-name">Project</div>
+      <div class="cat-desc">R&D / Competition</div>
+      <span class="cat-badge b-orange">Prizes + 1% Grant</span>
+    </div>
+    <div class="cat-card book" onclick="pickCat('book','Book Publication')">
+      <span class="cat-icon">&#128215;</span>
+      <div class="cat-name">Book Publication</div>
+      <div class="cat-desc">Faculty ISBN Book</div>
+      <span class="cat-badge b-green">&#8377;1,000</span>
+    </div>
+    <div class="cat-card phd" onclick="pickCat('phd','Ph.D / Post-Doctoral Fellowship')">
+      <span class="cat-icon">&#127891;</span>
+      <div class="cat-name">Ph.D / PDF</div>
+      <div class="cat-desc">Doctoral Fellowship</div>
+      <span class="cat-badge b-purple">10 Days Leave</span>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="sc2">
+  <button class="btn-back" onclick="goTo(1)">&#8592; Back</button>
+  <div class="pg-title">Author Position</div>
+  <div class="pg-sub">Select your role &#8212; incentives are calculated automatically based on co-author count</div>
+  <div class="sec-label">Select your authorship rank</div>
+  <div class="author-grid" id="authorGrid"></div>
+  <div class="coauth-picker" id="coauthPicker">
+    <div class="coauth-title">How many co-authors in total?</div>
+    <div class="coauth-sub">Enter the total number of co-authors (including yourself). The incentive pool will be divided equally among all of them.</div>
+    <div class="coauth-row">
+      <span class="coauth-label">Total co-authors:</span>
+      <input class="num-input" type="number" id="coauthCount" min="2" max="30" value="2" oninput="calcCoauth()"/>
+    </div>
+    <div class="coauth-result" id="coauthResult">
+      <div class="cr-each" id="coauthEach">&#8377;&#8212;</div>
+      <div class="cr-note" id="coauthNote">per co-author</div>
+    </div>
+    <button class="btn-cc" onclick="confirmCoauth()">Confirm &amp; Continue &#8594;</button>
+  </div>
+</div>
+
+<div class="screen" id="sc3">
+  <button class="btn-back" onclick="goTo(2)">&#8592; Back</button>
+  <div class="pg-title">Submission Form</div>
+  <div class="pg-sub">Complete all fields to submit to the R&D Department</div>
+  <div class="form-wrap">
+    <div class="form-card">
+      <div class="form-top">
+        <div class="form-top-title">Research Details</div>
+        <div class="tags" id="formTags"></div>
+      </div>
+      <div id="subTypeSection" style="display:none">
+        <div class="sec-label" style="margin-bottom:10px">Select Sub-type</div>
+        <div class="sub-grid" id="subTypeGrid"></div>
+      </div>
+      <div class="proj-level-section" id="projLevelSection">
+        <div class="sec-label" style="margin-bottom:10px">Project Level</div>
+        <div class="proj-level-grid" id="projLevelGrid"></div>
+        <div id="projRankSection" style="display:none">
+          <div class="sec-label" style="margin-bottom:10px;margin-top:4px">Prize Rank</div>
+          <div class="proj-rank-row" id="projRankRow"></div>
+        </div>
+      </div>
+      <div class="fgroup"><label>Full Name</label><input type="text" id="ff-name" placeholder="e.g. Yogesh Hande"/></div>
+      <div class="frow">
+        <div class="fgroup"><label>Email Address</label><input type="email" id="ff-email" placeholder="your@email.com"/></div>
+        <div class="fgroup"><label>Paper / Project ID</label><input type="text" id="ff-pid" placeholder="e.g. 12345"/></div>
+      </div>
+      <div class="fgroup"><label>Paper / Project Title</label><input type="text" id="ff-title" placeholder="e.g. AI Based Smart Fuel System"/></div>
+      <div class="fgroup">
+        <label>Department</label>
+        <select id="ff-dept">
+          <option value="">&#8212; Select Department &#8212;</option>
+          <option value="AI &amp; DS">AI &amp; DS</option>
+          <option value="CSE">CSE</option>
+          <option value="MECH">MECH</option>
+          <option value="CIVIL">CIVIL</option>
+          <option value="E&amp;TC">E&amp;TC</option>
+          <option value="ELECTRICAL">ELECTRICAL</option>
+          <option value="FE">FE</option>
+        </select>
+      </div>
+      <div class="fgroup">
+        <label>Upload Document</label>
+        <div class="file-zone">
+          <input type="file" id="ff-file" accept=".pdf,.docx" onchange="fileChosen(this)"/>
+          <div class="fz-icon">&#128206;</div>
+          <div class="fz-text"><span>Browse files</span> or drag &amp; drop</div>
+          <div class="fz-fmt">PDF / DOCX &#8212; Max 10MB</div>
+          <div class="fz-sel" id="fz-sel"></div>
+        </div>
+      </div>
+      <button class="btn-submit" id="subBtn" onclick="doSubmit()">Submit to R&D Department</button>
+    </div>
+    <div class="policy-sidebar" id="policySidebar"></div>
+  </div>
+</div>
+
+<div class="screen" id="sc4">
+  <div class="success-wrap">
+    <div class="success-card">
+      <div class="s-icon">&#9989;</div>
+      <div class="s-title">Submitted!</div>
+      <div class="s-sub">Your research is recorded and saved to the FTC R&D database.</div>
+      <div id="instEmail" class="email-card"></div>
+      <div id="rewardBox"></div>
+      <div id="userEmail" class="email-card"></div>
+      <button class="btn-reset" onclick="resetAll()">&#8635; New Submission</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<div id="tab-policy" style="display:none">
+  <div class="policy-page">
+    <div class="pg-title">R&D Policies</div>
+    <div class="pg-sub">Official incentive and support policies &#8212; Fabtech Technical Campus College of Engineering &amp; Research</div>
+    <div class="policy-section">
+      <div class="ps-head" onclick="tp(this)"><div class="ps-head-left"><span class="ps-head-icon">&#128187;</span><div><div class="ps-head-title">SCI / SEI &#8212; Software Engineering Institute</div><div class="ps-head-sub">SCI/ESCI Indexed Journals</div></div></div><span class="ps-chevron">&#9660;</span></div>
+      <div class="ps-body"><table class="ps-table">
+        <tr><th>Role</th><th>Incentive</th><th>Note</th></tr>
+        <tr><td>1st Author</td><td class="cyan">&#8377;7,000</td><td class="cond">SCI/ESCI indexed journal</td></tr>
+        <tr><td>2nd / Single Co-author</td><td class="cyan">&#8377;3,500</td><td class="cond">One co-author only</td></tr>
+        <tr><td>Multiple Co-authors</td><td class="cyan">&#8377;3,500 &#247; n authors</td><td class="cond">Divided equally</td></tr>
+      </table><div class="policy-note">SEI/SCI publications must be in peer-reviewed, SCI/ESCI indexed journals with a good impact factor. Affiliation must mention FTC, Sangola.</div></div>
+    </div>
+    <div class="policy-section">
+      <div class="ps-head" onclick="tp(this)"><div class="ps-head-left"><span class="ps-head-icon">&#128216;</span><div><div class="ps-head-title">Scopus / Web of Science</div><div class="ps-head-sub">Scopus and WoS Indexed Journals</div></div></div><span class="ps-chevron">&#9660;</span></div>
+      <div class="ps-body"><table class="ps-table">
+        <tr><th>Role</th><th>Incentive</th></tr>
+        <tr><td>1st Author</td><td class="amt">&#8377;5,000</td></tr>
+        <tr><td>2nd / Single Co-author</td><td class="amt">&#8377;2,500</td></tr>
+        <tr><td>Multiple Co-authors</td><td class="amt">&#8377;2,500 &#247; n authors</td></tr>
+      </table></div>
+    </div>
+    <div class="policy-section">
+      <div class="ps-head" onclick="tp(this)"><div class="ps-head-left"><span class="ps-head-icon">&#9889;</span><div><div class="ps-head-title">IEEE / ISTE / IEI / ACM</div><div class="ps-head-sub">Standard Listed Journals</div></div></div><span class="ps-chevron">&#9660;</span></div>
+      <div class="ps-body"><table class="ps-table">
+        <tr><th>Role</th><th>Incentive</th></tr>
+        <tr><td>1st Author</td><td class="amt">&#8377;3,000</td></tr>
+        <tr><td>2nd / Single Co-author</td><td class="amt">&#8377;1,500</td></tr>
+        <tr><td>Multiple Co-authors</td><td class="amt">&#8377;1,500 &#247; n authors</td></tr>
+      </table></div>
+    </div>
+    <div class="policy-section">
+      <div class="ps-head" onclick="tp(this)"><div class="ps-head-left"><span class="ps-head-icon">&#127908;</span><div><div class="ps-head-title">Conferences</div><div class="ps-head-sub">National / International</div></div></div><span class="ps-chevron">&#9660;</span></div>
+      <div class="ps-body"><table class="ps-table">
+        <tr><th>Support</th><th>Amount</th></tr>
+        <tr><td>Registration Fee</td><td class="amt">50% Reimbursed</td></tr>
+        <tr><td>Travel (Bus / 3-tier AC Train)</td><td class="amt">100% Reimbursed</td></tr>
+      </table></div>
+    </div>
+    <div class="policy-section">
+      <div class="ps-head" onclick="tp(this)"><div class="ps-head-left"><span class="ps-head-icon">&#128220;</span><div><div class="ps-head-title">Patent / IPR</div><div class="ps-head-sub">Indian Patents &#183; Design &#183; Copyright &#183; TM</div></div></div><span class="ps-chevron">&#9660;</span></div>
+      <div class="ps-body"><table class="ps-table">
+        <tr><th>Type</th><th>Stage</th><th>Incentive</th></tr>
+        <tr><td>Indian Patent</td><td>Published</td><td class="amt">&#8377;5,000</td></tr>
+        <tr><td>Indian Patent</td><td>Granted</td><td class="amt">&#8377;75,000</td></tr>
+        <tr><td>Design / Copyright / TM</td><td>Published</td><td class="amt">&#8377;1,000</td></tr>
+        <tr><td>Design / Copyright / TM</td><td>Granted</td><td class="amt">&#8377;10,000</td></tr>
+      </table><div class="policy-note">50% registration fee covered by institute. Claims after publication/grant only.</div></div>
+    </div>
+    <div class="policy-section">
+      <div class="ps-head" onclick="tp(this)"><div class="ps-head-left"><span class="ps-head-icon">&#128640;</span><div><div class="ps-head-title">Research Projects &amp; Competitions</div><div class="ps-head-sub">Funded &#183; National &#183; State &#183; University &#183; Inter-Institute</div></div></div><span class="ps-chevron">&#9660;</span></div>
+      <div class="ps-body">
+        <table class="ps-table">
+          <tr><th>Type</th><th>Benefit</th></tr>
+          <tr><td>PI Annual Incentive (funded)</td><td class="amt">1% of total grant</td></tr>
+          <tr><td>Material Cost (per group)</td><td class="amt">Up to &#8377;3,000</td></tr>
+          <tr><td>Registration Fee</td><td class="amt">50% covered</td></tr>
+          <tr><td>Travel (bus)</td><td class="amt">100% actual</td></tr>
+        </table>
+        <table class="ps-table" style="margin-top:13px">
+          <tr><th>Level</th><th>&#129351; 1st</th><th>&#129352; 2nd</th><th>&#129353; 3rd</th></tr>
+          <tr><td>National</td><td class="amt">&#8377;7,000</td><td class="amt">&#8377;5,000</td><td class="amt">&#8377;2,000</td></tr>
+          <tr><td>State</td><td class="amt">&#8377;3,000</td><td class="amt">&#8377;2,000</td><td class="amt">&#8377;1,000</td></tr>
+          <tr><td>University</td><td class="amt">&#8377;2,000</td><td class="amt">&#8377;1,500</td><td class="amt">&#8377;750</td></tr>
+          <tr><td>Inter-Institute</td><td class="amt">&#8377;1,500</td><td class="amt">&#8377;1,000</td><td class="amt">&#8377;500</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="policy-section">
+      <div class="ps-head" onclick="tp(this)"><div class="ps-head-left"><span class="ps-head-icon">&#128215;</span><div><div class="ps-head-title">Book Publication</div><div class="ps-head-sub">Faculty ISBN Books</div></div></div><span class="ps-chevron">&#9660;</span></div>
+      <div class="ps-body"><table class="ps-table">
+        <tr><th>Item</th><th>Policy</th></tr>
+        <tr><td>1st Author Incentive</td><td class="amt">&#8377;1,000</td></tr>
+        <tr><td>Revenue Share (net)</td><td class="cond">80% faculty &#183; 20% institute</td></tr>
+        <tr><td>Copyright / Royalties</td><td class="cond">Retained by faculty</td></tr>
+      </table></div>
+    </div>
+    <div class="policy-section">
+      <div class="ps-head" onclick="tp(this)"><div class="ps-head-left"><span class="ps-head-icon">&#127891;</span><div><div class="ps-head-title">Ph.D / Post-Doctoral Fellowship</div><div class="ps-head-sub">Leaves, Bond &amp; Fellowship Terms</div></div></div><span class="ps-chevron">&#9660;</span></div>
+      <div class="ps-body"><table class="ps-table">
+        <tr><th>Benefit</th><th>Details</th></tr>
+        <tr><td>Special Leaves</td><td class="amt">10 days / year</td></tr>
+        <tr><td>Eligibility</td><td class="cond">2 years regular service</td></tr>
+        <tr><td>Post-PhD Bond</td><td class="cond">2 years service after PhD</td></tr>
+        <tr><td>PDF Duration</td><td class="amt">1 year (extendable to 2)</td></tr>
+      </table></div>
+    </div>
+  </div>
+</div>
+</main>
+
+<div class="toast" id="toast"><span id="toast-msg"></span></div>
+
+<script>
+
+// ===== FEATURE 1: LOGIN GUARD - block access if not logged in =====
+var _user = null;
+(function(){
+  var s = sessionStorage.getItem('ftcUser');
+  if(!s){ location.href='/login.html'; return; }
+  try{
+    _user = JSON.parse(s);
+    // Set profile avatar initial letter
+    document.getElementById('profInitial').textContent = (_user.fullName||'U')[0].toUpperCase();
+    document.getElementById('pdName').textContent = _user.fullName||'';
+    document.getElementById('pdEmail').textContent = _user.email||'';
+    document.getElementById('pdRole').textContent = (_user.role||'STUDENT') + (_user.department ? ' | '+_user.department : '');
+    // Show profile photo if exists
+    if(_user.profilePhoto){
+      var img=document.createElement('img');
+      img.src=_user.profilePhoto+'?t='+Date.now();
+      img.onerror=function(){img.remove();};
+      var btn=document.getElementById('profBtn');
+      btn.innerHTML=''; btn.appendChild(img);
+    }
+  }catch(e){ location.href='/login.html'; }
+})();
+
+function toggleDrop(){
+  document.getElementById('profDrop').classList.toggle('open');
+}
+document.addEventListener('click',function(e){
+  var c=document.getElementById('profCorner');
+  if(c&&!c.contains(e.target)) document.getElementById('profDrop').classList.remove('open');
+});
+
+function doLogout(){
+  sessionStorage.removeItem('ftcUser');
+  location.href='/login.html';
+}
+
+// FEATURE 4: Upload profile photo
+async function doPhotoUpload(input){
+  if(!input.files[0]||!_user) return;
+  var st=document.getElementById('photoStatus');
+  st.textContent='Uploading...'; st.className='pd-photo-status ok'; st.style.display='block';
+  try{
+    var fd=new FormData(); fd.append('photo',input.files[0]);
+    var r=await fetch('/api/auth/upload-photo/'+_user.id,{method:'POST',body:fd});
+    var j=await r.json();
+    if(j.success){
+      _user=j.data; sessionStorage.setItem('ftcUser',JSON.stringify(_user));
+      if(_user.profilePhoto){
+        var img=new Image(); img.style='width:100%;height:100%;object-fit:cover;';
+        img.src=_user.profilePhoto+'?t='+Date.now();
+        var btn=document.getElementById('profBtn');
+        btn.innerHTML=''; btn.appendChild(img);
+      }
+      st.textContent='Photo updated!'; st.className='pd-photo-status ok';
+    } else { st.textContent=j.message; st.className='pd-photo-status er'; }
+  }catch(e){ st.textContent='Error: '+e.message; st.className='pd-photo-status er'; }
+  setTimeout(()=>{ st.style.display='none'; }, 2500);
+}
+
+// My Submissions modal
+async function openSubs(){
+  document.getElementById('profDrop').classList.remove('open');
+  document.getElementById('subsOv').classList.add('open');
+  document.getElementById('subsBody').innerHTML='<div style="text-align:center;color:#5a6a8a;padding:20px">Loading...</div>';
+  try{
+    var r=await fetch('/api/my-submissions?email='+encodeURIComponent(_user.email));
+    var j=await r.json();
+    if(!j.success||!j.data||!j.data.length){
+      document.getElementById('subsCount').textContent='No submissions yet';
+      document.getElementById('subsBody').innerHTML='<div style="text-align:center;color:#5a6a8a;padding:20px">You have not submitted any research yet.</div>';
+      return;
+    }
+    document.getElementById('subsCount').textContent=j.data.length+' submission(s) found';
+    document.getElementById('subsBody').innerHTML=j.data.map(function(s){
+      var sc='si-'+(s.status||'pending').toLowerCase();
+      var reply=s.adminReply?'<div class="si-reply"><strong>Admin Reply:</strong> '+s.adminReply+'</div>':'';
+      return '<div class="sub-item"><div class="si-title">'+s.paperTitle+'</div>'
+        +'<div class="si-row">Category: <span>'+s.categoryName+'</span> &nbsp;|&nbsp; Author: <span>'+s.authorType+'</span></div>'
+        +'<div class="si-row">Status: <span class="'+sc+'">'+(s.status||'PENDING')+'</span></div>'
+        +reply+'</div>';
+    }).join('');
+  }catch(e){
+    document.getElementById('subsBody').innerHTML='<div style="color:#f87171;padding:12px">Error: '+e.message+'</div>';
+  }
+}
+function closeSubsOv(e){ if(e.target===document.getElementById('subsOv')) document.getElementById('subsOv').classList.remove('open'); }
+// ===== END LOGIN GUARD & PROFILE =====
+
+const CATS={
+  sci:{name:'SCI / SEI',icon:'&#128187;',firstReward:7000,coSingleReward:3500,coMultiPool:3500,
+    sidebar:{title:'SCI / SEI Policy',rows:[
+      {l:'1st Author',v:'&#8377;7,000',c:'cyan'},{l:'2nd / Single Co-author',v:'&#8377;3,500',c:'cyan'},
+      {l:'Multi Co-authors',v:'&#8377;3,500 &#247; n authors',c:''},{l:'Affiliation',v:'Required &#8211; FTC',c:'green'}
+    ],cond:'SCI/ESCI indexed journal with good impact factor required.'}},
+  scopus:{name:'Scopus / Web of Science',icon:'&#128216;',firstReward:5000,coSingleReward:2500,coMultiPool:2500,
+    sidebar:{title:'Scopus / WoS Policy',rows:[
+      {l:'1st Author',v:'&#8377;5,000',c:'gold'},{l:'2nd / Single Co-author',v:'&#8377;2,500',c:'gold'},
+      {l:'Multi Co-authors',v:'&#8377;2,500 &#247; n authors',c:''},{l:'Affiliation',v:'Required &#8211; FTC',c:'green'}
+    ],cond:'Must be Scopus/WoS indexed with a good impact factor.'}},
+  wos:{name:'Web of Science',icon:'&#128300;',firstReward:5000,coSingleReward:2500,coMultiPool:2500,
+    sidebar:{title:'Web of Science Policy',rows:[
+      {l:'1st Author',v:'&#8377;5,000',c:'gold'},{l:'SCI/ESCI 1st Author',v:'&#8377;7,000',c:'gold'},
+      {l:'2nd / Single Co-author',v:'&#8377;2,500',c:'gold'},{l:'Multi Co-authors',v:'&#8377;2,500 &#247; n',c:''}
+    ],cond:'SCI/ESCI journals upgrade 1st author incentive to &#8377;7,000.'}},
+  ieee:{name:'IEEE / ISTE / IEI / ACM',icon:'&#9889;',firstReward:3000,coSingleReward:1500,coMultiPool:1500,
+    sidebar:{title:'IEEE / ISTE Policy',rows:[
+      {l:'1st Author',v:'&#8377;3,000',c:'gold'},{l:'2nd / Single Co-author',v:'&#8377;1,500',c:'gold'},
+      {l:'Multi Co-authors',v:'&#8377;1,500 &#247; n authors',c:''},{l:'Affiliation',v:'Required &#8211; FTC',c:'green'}
+    ],cond:'IEEE, ISTE, IEI, ACM indexed journals with good impact factor.'}},
+  conf:{name:'Conference',icon:'&#127908;',firstReward:0,coSingleReward:0,coMultiPool:0,
+    subTypes:[{i:'&#127758;',n:'International',d:'Scopus/IEEE indexed'},{i:'&#127470;&#127475;',n:'National',d:'ISTE, NIT, IIT level'}],
+    sidebar:{title:'Conference Policy',rows:[
+      {l:'Registration Fee',v:'50% Reimbursed',c:'gold'},{l:'Travel (Bus / 3AC)',v:'100% Reimbursed',c:'gold'},
+      {l:'Priority',v:'Scopus/IEEE indexed',c:'green'}
+    ],cond:'Submit actual travel bills. Priority to indexed conferences.'}},
+  patent:{name:'Patent / IPR',icon:'&#128220;',firstReward:0,coSingleReward:0,coMultiPool:0,
+    subTypes:[{i:'&#128161;',n:'Indian Patent',d:'Invention patent'},{i:'&#127912;',n:'Industrial Design',d:'Design registration'},{i:'&#169;',n:'Copyright',d:'Literary/artistic'},{i:'&#8482;',n:'Trademark',d:'Brand / logo'}],
+    sidebar:{title:'Patent / IPR Policy',rows:[
+      {l:'Reg. Fee',v:'50% by institute',c:'gold'},{l:'Published &#8211; Patent',v:'&#8377;5,000',c:'gold'},
+      {l:'Granted &#8211; Patent',v:'&#8377;75,000',c:'gold'},{l:'Published &#8211; Design/TM',v:'&#8377;1,000',c:''},
+      {l:'Granted &#8211; Design/TM',v:'&#8377;10,000',c:''}
+    ],cond:'Claims after publication/grant only. Must include FTC affiliation.'}},
+  proj:{name:'Research Project / Competition',icon:'&#128640;',firstReward:0,coSingleReward:0,coMultiPool:0,isProject:true,
+    subTypes:[{i:'&#127963;',n:'Funded Project',d:'Govt / non-govt grant'},{i:'&#127942;',n:'Competition',d:'Select level below'}],
+    sidebar:{title:'Project Policy',rows:[
+      {l:'PI Annual Incentive',v:'1% of grant',c:'gold'},{l:'Material Cost',v:'Up to &#8377;3,000/group',c:''},
+      {l:'Reg. Fee',v:'50% covered',c:''},{l:'National 1st',v:'&#8377;7,000',c:'gold'},
+      {l:'State 1st',v:'&#8377;3,000',c:''},{l:'University 1st',v:'&#8377;2,000',c:''}
+    ],cond:'Select level + rank to auto-calculate prize amount.'}},
+  book:{name:'Book Publication',icon:'&#128215;',firstReward:1000,coSingleReward:0,coMultiPool:0,
+    sidebar:{title:'Book Policy',rows:[
+      {l:'1st Author Incentive',v:'&#8377;1,000',c:'gold'},{l:'Copyright',v:'Retained by faculty',c:'green'},
+      {l:'Revenue Share',v:'80% faculty &#183; 20% FTC',c:''}
+    ],cond:'Book must have an ISBN. Academic integrity policies apply.'}},
+  phd:{name:'Ph.D / Post-Doctoral Fellowship',icon:'&#127891;',firstReward:0,coSingleReward:0,coMultiPool:0,
+    sidebar:{title:'Ph.D / PDF Policy',rows:[
+      {l:'Special Leaves',v:'10 days / year',c:'gold'},{l:'Eligibility',v:'2 yrs regular service',c:''},
+      {l:'Post-PhD Bond',v:'2 yrs service',c:''},{l:'PDF Duration',v:'1 yr (extendable 2)',c:'gold'}
+    ],cond:'Leaves non-accumulative. Bond required post-PhD.'}}
+};
+
+const PRIZES={'National':[7000,5000,2000],'State':[3000,2000,1000],'University':[2000,1500,750],'Inter-Institute':[1500,1000,500]};
+
+let S={catKey:'',catName:'',authorType:'',authorReward:0,numCoAuthors:2,perAuthorShare:0,subType:'',projLevel:'',projRank:'',projPrize:0};
+
+function switchTab(tab,el){
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('tab-submit').style.display=tab==='submit'?'':'none';
+  document.getElementById('tab-policy').style.display=tab==='policy'?'':'none';
+  document.getElementById('stepTrack').style.display=tab==='submit'?'':'none';
+}
+
+function goTo(step){
+  for(var i=1;i<=4;i++){
+    document.getElementById('sc'+i).classList.remove('active');
+    var d=document.getElementById('sd'+i);
+    d.classList.remove('active','done');
+    if(i<step)d.classList.add('done');
+    else if(i===step)d.classList.add('active');
+  }
+  document.getElementById('sc'+step).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function pickCat(key,name){
+  S={catKey:key,catName:name,authorType:'',authorReward:0,numCoAuthors:2,perAuthorShare:0,subType:'',projLevel:'',projRank:'',projPrize:0};
+  document.getElementById('coauthPicker').classList.remove('show');
+  buildAuthors();
+  goTo(2);
+}
+
+function buildAuthors(){
+  var cfg=CATS[S.catKey];
+  var cols=['var(--accent)','var(--gold)','var(--green)'];
+  var opts=[
+    {rank:'1ST',label:'1st Author',type:'1st',note:'Primary contributor & lead researcher',reward:cfg.firstReward,rt:cfg.firstReward>0?null:(cfg.isProject?'Select level & rank':'50% reg + travel')},
+    {rank:'2ND',label:'2nd Author',type:'2nd',note:'Second contributor to the research',reward:cfg.coSingleReward,rt:cfg.coSingleReward>0?null:(cfg.isProject?'Select level & rank':'Per policy')},
+    {rank:'MULTI',label:'Multiple Co-authors',type:'multi',note:'3+ authors &#8212; pool split equally',reward:0,rt:cfg.coMultiPool>0?'&#8377;'+cfg.coMultiPool.toLocaleString()+' &#247; n authors':(cfg.isProject?'Shared prize':'Per policy')}
+  ];
+  document.getElementById('authorGrid').innerHTML=opts.map(function(a,i){
+    var badge=a.reward>0
+      ?'<span class="cat-badge b-gold">&#127942; &#8377;'+a.reward.toLocaleString()+'</span>'
+      :a.rt?'<span class="cat-badge b-blue">&#8505; '+a.rt+'</span>'
+      :'<span class="cat-badge b-muted">Participation Credit</span>';
+    return '<div class="author-card" onclick="pickAuthorType(\''+a.type+'\','+a.reward+')">'
+      +'<div class="auth-num" style="color:'+cols[i]+'">'+a.rank+'</div>'
+      +'<div class="auth-title">'+a.label+'</div>'
+      +'<div class="auth-note">'+a.note+'</div>'
+      +badge+'</div>';
+  }).join('');
+}
+
+function pickAuthorType(type,reward){
+  S.authorType=type; S.authorReward=reward;
+  document.getElementById('coauthPicker').classList.remove('show');
+  if(type==='multi'){
+    S.numCoAuthors=2;
+    document.getElementById('coauthCount').value=2;
+    document.getElementById('coauthResult').classList.remove('show');
+    document.getElementById('coauthPicker').classList.add('show');
+    calcCoauth();
+  } else {
+    buildFormUI(); goTo(3);
+  }
+}
+
+function calcCoauth(){
+  var n=parseInt(document.getElementById('coauthCount').value)||2;
+  var pool=CATS[S.catKey].coMultiPool||0;
+  S.numCoAuthors=n;
+  if(pool>0&&n>=2){
+    var each=Math.floor(pool/n);
+    S.perAuthorShare=each;
+    document.getElementById('coauthEach').textContent='&#8377;'+each.toLocaleString();
+    document.getElementById('coauthNote').textContent='per co-author  (&#8377;'+pool.toLocaleString()+' &#247; '+n+' authors = &#8377;'+each.toLocaleString()+' each)';
+  } else {
+    S.perAuthorShare=0;
+    document.getElementById('coauthEach').textContent='See policy';
+    document.getElementById('coauthNote').textContent='No direct cash &#8212; check Policy tab for details';
+  }
+  document.getElementById('coauthResult').classList.add('show');
+}
+
+function confirmCoauth(){
+  calcCoauth();
+  S.authorReward=S.perAuthorShare;
+  buildFormUI(); goTo(3);
+}
+
+function buildFormUI(){
+  var cfg=CATS[S.catKey];
+  var aLabel=S.authorType==='multi'?'Multi Co-authors ('+S.numCoAuthors+')'
+    :S.authorType==='1st'?'1st Author':'2nd Author';
+  var rAmt=S.authorReward;
+  document.getElementById('formTags').innerHTML=
+    '<span class="tag b-blue">'+cfg.icon+' '+cfg.name+'</span>'
+    +'<span class="tag b-green">'+aLabel+'</span>'
+    +(rAmt>0?'<span class="tag b-gold">&#8377;'+rAmt.toLocaleString()+' Incentive</span>':'');
+  if(cfg.subTypes){
+    document.getElementById('subTypeSection').style.display='';
+    document.getElementById('subTypeGrid').innerHTML=cfg.subTypes.map(function(st){
+      return '<div class="sub-btn" onclick="pickSub(this,\''+st.n+'\')">'
+        +'<span class="si">'+st.i+'</span><div class="sn">'+st.n+'</div><div class="sd">'+st.d+'</div></div>';
+    }).join('');
+  } else { document.getElementById('subTypeSection').style.display='none'; }
+  if(cfg.isProject){ buildProjLevels(); }
+  else { document.getElementById('projLevelSection').classList.remove('show'); }
+  var sb=cfg.sidebar;
+  document.getElementById('policySidebar').innerHTML=
+    '<div class="ps-title">&#128203; '+sb.title+'</div>'
+    +sb.rows.map(function(r){return '<div class="ps-item"><div class="ps-item-label">'+r.l+'</div><div class="ps-item-val '+r.c+'">'+r.v+'</div></div>';}).join('')
+    +'<div class="ps-cond">&#8505; '+sb.cond+'</div>';
+}
+
+function pickSub(el,name){
+  document.querySelectorAll('.sub-btn').forEach(function(b){b.classList.remove('sel');});
+  el.classList.add('sel'); S.subType=name;
+  if(S.catKey==='proj'&&name==='Competition') buildProjLevels();
+  else if(S.catKey==='proj') document.getElementById('projLevelSection').classList.remove('show');
+}
+
+function buildProjLevels(){
+  document.getElementById('projLevelSection').classList.add('show');
+  document.getElementById('projLevelGrid').innerHTML=Object.keys(PRIZES).map(function(lvl){
+    var p=PRIZES[lvl];
+    var icon=lvl==='National'?'&#127470;&#127475;':lvl==='State'?'&#127963;':lvl==='University'?'&#127891;':'&#127983;';
+    return '<div class="plvl-btn" onclick="pickProjLevel(this,\''+lvl+'\')">'
+      +'<div class="pl-icon">'+icon+'</div>'
+      +'<div class="pl-name">'+lvl+'</div>'
+      +'<div class="pl-prizes">&#129351;&#8377;'+p[0].toLocaleString()+' &#183; &#129352;&#8377;'+p[1].toLocaleString()+' &#183; &#129353;&#8377;'+p[2].toLocaleString()+'</div></div>';
+  }).join('');
+  document.getElementById('projRankSection').style.display='none';
+}
+
+function pickProjLevel(el,level){
+  document.querySelectorAll('.plvl-btn').forEach(function(b){b.classList.remove('sel');});
+  el.classList.add('sel'); S.projLevel=level; S.projRank=''; S.projPrize=0;
+  var p=PRIZES[level];
+  document.getElementById('projRankSection').style.display='';
+  document.getElementById('projRankRow').innerHTML=
+    [['&#129351;','1st',p[0]],['&#129352;','2nd',p[1]],['&#129353;','3rd',p[2]]].map(function(x){
+      return '<div class="prank-btn" onclick="pickProjRank(this,\''+x[1]+'\','+x[2]+')">'
+        +'<div class="pr-r">'+x[0]+' '+x[1]+'</div><div class="pr-a">&#8377;'+x[2].toLocaleString()+'</div></div>';
+    }).join('');
+}
+
+function pickProjRank(el,rank,prize){
+  document.querySelectorAll('.prank-btn').forEach(function(b){b.classList.remove('sel');});
+  el.classList.add('sel'); S.projRank=rank; S.projPrize=prize; S.authorReward=prize;
+  var cfg=CATS[S.catKey];
+  document.getElementById('formTags').innerHTML=
+    '<span class="tag b-blue">'+cfg.icon+' '+cfg.name+'</span>'
+    +'<span class="tag b-orange">'+S.projLevel+' &#183; '+rank+' Prize</span>'
+    +'<span class="tag b-gold">&#8377;'+prize.toLocaleString()+'</span>';
+}
+
+function fileChosen(inp){
+  document.getElementById('fz-sel').textContent=inp.files[0]?'&#10003; '+inp.files[0].name:'';
+}
+
+// ===== SUBMIT - saves to MySQL via Spring Boot API =====
+async function doSubmit(){
+  var name=document.getElementById('ff-name').value.trim();
+  var email=document.getElementById('ff-email').value.trim();
+  var pid=document.getElementById('ff-pid').value.trim();
+  var title=document.getElementById('ff-title').value.trim();
+  var dept=document.getElementById('ff-dept').value;
+  if(!name||!email||!pid||!title||!dept){toast('Please fill all required fields',true);return;}
+  if(!email.includes('@')){toast('Invalid email address',true);return;}
+  var btn=document.getElementById('subBtn');
+  btn.disabled=true; btn.innerHTML='<span class="spinner"></span> Saving to database...';
+  var fd=new FormData();
+  fd.append('fullName',name);
+  fd.append('email',email);
+  fd.append('paperId',pid);
+  fd.append('paperTitle',title);
+  fd.append('department',dept);
+  fd.append('authorType',S.authorType||'');
+  fd.append('category',S.catKey);
+  fd.append('categoryName',S.catName||'');
+  fd.append('subType',S.subType||'');
+  fd.append('projLevel',S.projLevel||'');
+  fd.append('projRank',S.projRank||'');
+  if(S.projPrize>0) fd.append('projPrize',S.projPrize);
+  if(S.numCoAuthors>1) fd.append('numCoauthors',S.numCoAuthors);
+  var fi=document.getElementById('ff-file');
+  if(fi.files[0]) fd.append('file',fi.files[0]);
+  try {
+    var res=await fetch('/api/submit',{method:'POST',body:fd});
+    var json=await res.json();
+    if(json.success){
+      buildSuccess(name,email,pid,title,dept,json.data);
+      goTo(4);
+      toast('Submission saved to database! ID: #'+json.data.id);
+    } else {
+      toast(json.message,true);
+    }
+  } catch(e){
+    toast('Network error: '+e.message,true);
+  } finally {
+    btn.disabled=false; btn.innerHTML='Submit to R&D Department';
+  }
+}
+
+function buildSuccess(name,email,pid,title,dept,dbData){
+  var cfg=CATS[S.catKey];
+  var sub=S.subType?' &#183; '+S.subType:'';
+  var projInfo=S.projLevel?' &#183; '+S.projLevel+' Level &#183; '+S.projRank+' Prize':'';
+  var aLabel=S.authorType==='multi'?'Multiple Co-authors ('+S.numCoAuthors+' total)'
+    :S.authorType==='1st'?'1st Author':'2nd Author';
+  var reward=dbData&&dbData.rewardAmount?dbData.rewardAmount:S.authorReward;
+  var dbId=dbData&&dbData.id?' | DB ID: #'+dbData.id:'';
+  document.getElementById('instEmail').innerHTML=
+    '<div class="ec-title">&#127979; Email &#8594; FTC R&D Department</div>'
+    +'<div class="er"><span class="el">Subject: </span><span class="ev">New Research Submission &#8211; '+cfg.name+sub+projInfo+'</span></div>'
+    +'<div style="height:5px"></div>'
+    +'<div class="er"><span class="el">Name: </span><span class="ev">'+name+'</span></div>'
+    +'<div class="er"><span class="el">Email: </span><span class="ev">'+email+'</span></div>'
+    +'<div class="er"><span class="el">Paper/Project ID: </span><span class="ev">'+pid+'</span></div>'
+    +'<div class="er"><span class="el">Title: </span><span class="ev">'+title+'</span></div>'
+    +'<div class="er"><span class="el">Department: </span><span class="ev">'+dept+'</span></div>'
+    +'<div class="er"><span class="el">Author Position: </span><span class="ev">'+aLabel+'</span></div>'
+    +'<div class="er"><span class="el">Category: </span><span class="ev">'+cfg.name+sub+projInfo+'</span></div>'
+    +(reward>0?'<div class="er"><span class="el">Reward: </span><span class="ev" style="color:var(--gold)">&#8377;'+reward.toLocaleString()+'</span></div>':'')
+    +'<div style="height:5px;border-top:1px solid var(--border);margin-top:7px;padding-top:7px"></div>'
+    +'<div style="color:var(--muted);font-size:.73rem">Saved to database'+dbId+'. Submitted via FTC R&D Portal.</div>';
+  var rb=document.getElementById('rewardBox');
+  if(reward>0){
+    var lbl=S.projPrize>0?S.projLevel+' Level &#8211; '+S.projRank+' Prize'
+      :S.authorType==='multi'?'Per-author share ('+S.numCoAuthors+' authors)'
+      :'Research Incentive &#8211; '+aLabel;
+    rb.innerHTML='<div class="reward-box"><div><div class="rb-amt">&#8377;'+reward.toLocaleString()+'</div><div class="rb-lbl">'+lbl+'</div></div><div style="margin-left:auto;font-size:1.7rem">&#127942;</div></div>';
+  } else { rb.innerHTML=''; }
+  var rLine=reward>0?'<div class="er" style="color:var(--gold);font-weight:600;margin-top:6px">&#127942; You are eligible for a research incentive of &#8377;'+reward.toLocaleString()+' as per FTC R&D Policy.</div>':'';
+  document.getElementById('userEmail').innerHTML=
+    '<div class="ec-title">&#128100; Email &#8594; '+name+' ('+email+')</div>'
+    +'<div class="er"><span class="el">Subject: </span><span class="ev">Research Submission Confirmed &#8211; FTC R&D Cell</span></div>'
+    +'<div style="height:5px"></div>'
+    +'<div>Dear '+name+',</div><div style="height:4px"></div>'
+    +'<div style="color:var(--muted)">Your research has been successfully submitted to the R&D Department of Fabtech Technical Campus.</div>'
+    +'<div style="height:5px"></div>'
+    +'<div class="er"><span class="el">Title: </span><span class="ev">'+title+'</span></div>'
+    +'<div class="er"><span class="el">Category: </span><span class="ev">'+cfg.name+sub+projInfo+'</span></div>'
+    +'<div class="er"><span class="el">Position: </span><span class="ev">'+aLabel+'</span></div>'
+    +rLine
+    +'<div style="height:7px;border-top:1px solid var(--border);margin-top:7px;padding-top:7px"></div>'
+    +'<div style="color:var(--muted);font-size:.72rem">Regards,<br>Research &amp; Development Cell<br>Fabtech Technical Campus College of Engineering &amp; Research, Sangola</div>';
+}
+
+function resetAll(){
+  S={catKey:'',catName:'',authorType:'',authorReward:0,numCoAuthors:2,perAuthorShare:0,subType:'',projLevel:'',projRank:'',projPrize:0};
+  ['ff-name','ff-email','ff-pid','ff-title','ff-file'].forEach(function(id){document.getElementById(id).value='';});
+  document.getElementById('ff-dept').value='';
+  document.getElementById('fz-sel').textContent='';
+  document.getElementById('coauthPicker').classList.remove('show');
+  goTo(1);
+}
+
+function tp(head){
+  var body=head.nextElementSibling,chev=head.querySelector('.ps-chevron');
+  body.classList.toggle('open'); chev.classList.toggle('open');
+}
+
+function toast(msg,isErr){
+  var t=document.getElementById('toast');
+  document.getElementById('toast-msg').textContent=msg;
+  t.className='toast'+(isErr?' err':'');
+  t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show');},3500);
+}
+</script>
+</body>
+</html>

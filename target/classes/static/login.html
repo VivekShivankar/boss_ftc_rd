@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FTC Campus R&D Platform - Login</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Segoe UI',sans-serif;background:#08090f;color:#dde4f0;min-height:100vh;display:flex;}
+body::before{content:'';position:fixed;inset:0;background:linear-gradient(rgba(79,125,243,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(79,125,243,0.03) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;}
+/* LEFT WELCOME PANEL */
+.left{flex:1;display:flex;flex-direction:column;justify-content:center;padding:60px 70px;border-right:1px solid #1e2840;position:relative;z-index:1;}
+.badge{display:inline-flex;align-items:center;gap:8px;background:rgba(79,125,243,.1);border:1px solid rgba(79,125,243,.25);border-radius:20px;padding:6px 14px;font-size:.78rem;font-weight:600;color:#4f7df3;margin-bottom:28px;width:fit-content;}
+.welcome-title{font-size:2.8rem;font-weight:800;line-height:1.2;margin-bottom:16px;background:linear-gradient(130deg,#fff 40%,#4f7df3);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.welcome-sub{color:#5a6a8a;font-size:.95rem;line-height:1.7;margin-bottom:40px;max-width:420px;}
+.features{display:flex;flex-direction:column;gap:16px;}
+.feat{display:flex;align-items:center;gap:14px;}
+.feat-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;}
+.ic-blue{background:rgba(79,125,243,.15);border:1px solid rgba(79,125,243,.2);}
+.ic-gold{background:rgba(245,197,66,.12);border:1px solid rgba(245,197,66,.2);}
+.ic-green{background:rgba(52,211,153,.12);border:1px solid rgba(52,211,153,.2);}
+.ic-pink{background:rgba(244,114,182,.12);border:1px solid rgba(244,114,182,.2);}
+.feat-title{font-weight:600;font-size:.88rem;}
+.feat-sub{color:#5a6a8a;font-size:.75rem;margin-top:1px;}
+.stats{display:flex;gap:32px;margin-top:44px;padding-top:36px;border-top:1px solid #1e2840;}
+.stat-num{font-size:1.6rem;font-weight:800;color:#4f7df3;}
+.stat-lbl{font-size:.7rem;color:#5a6a8a;margin-top:2px;}
+/* RIGHT FORM PANEL */
+.right{width:460px;display:flex;flex-direction:column;justify-content:center;padding:50px 44px;position:relative;z-index:1;}
+.logo{display:flex;align-items:center;gap:10px;margin-bottom:30px;}
+.logo-box{width:42px;height:42px;background:linear-gradient(135deg,#4f7df3,#2563eb);border-radius:11px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.9rem;color:#fff;box-shadow:0 6px 20px rgba(79,125,243,.3);}
+.logo-name{font-weight:800;font-size:1.05rem;}
+.logo-sub-txt{font-size:.65rem;color:#5a6a8a;margin-top:1px;}
+.card{background:#0f1117;border:1px solid #1e2840;border-radius:20px;padding:28px;}
+.tabs{display:flex;background:#161b27;border-radius:10px;padding:4px;gap:4px;margin-bottom:24px;}
+.tab{flex:1;padding:9px;text-align:center;font-weight:700;font-size:.83rem;border-radius:7px;cursor:pointer;color:#5a6a8a;transition:all .2s;}
+.tab.active{background:#4f7df3;color:#fff;}
+.panel{display:none;}
+.panel.active{display:block;animation:fadeIn .2s;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+.panel-title{font-weight:800;font-size:1.15rem;margin-bottom:4px;}
+.panel-sub{color:#5a6a8a;font-size:.8rem;margin-bottom:20px;}
+.fg{margin-bottom:13px;}
+.fg label{display:block;font-size:.68rem;font-weight:700;color:#5a6a8a;letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px;}
+.fg input,.fg select{width:100%;background:#08090f;border:1px solid #1e2840;border-radius:9px;padding:10px 13px;color:#dde4f0;font-size:.87rem;outline:none;transition:border-color .2s;-webkit-appearance:none;}
+.fg input:focus,.fg select:focus{border-color:#4f7df3;box-shadow:0 0 0 3px rgba(79,125,243,.1);}
+.fg select option{background:#161b27;}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.btn{width:100%;padding:12px;background:linear-gradient(135deg,#4f7df3,#2563eb);border:none;border-radius:10px;color:#fff;font-weight:700;font-size:.9rem;cursor:pointer;margin-top:4px;transition:all .2s;}
+.btn:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(79,125,243,.3);}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none;}
+.forgot{text-align:right;margin-top:-9px;margin-bottom:12px;}
+.forgot a{color:#4f7df3;font-size:.76rem;cursor:pointer;}
+.msg{padding:9px 13px;border-radius:8px;font-size:.8rem;margin-bottom:12px;display:none;}
+.msg.ok{background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.25);color:#34d399;}
+.msg.er{background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.25);color:#f87171;}
+.spin{display:inline-block;width:13px;height:13px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;}
+@keyframes sp{to{transform:rotate(360deg);}}
+.back-lnk{color:#4f7df3;font-size:.78rem;cursor:pointer;display:inline-block;margin-bottom:12px;}
+@media(max-width:860px){body{flex-direction:column;}.left{padding:36px 24px;border-right:none;border-bottom:1px solid #1e2840;}.right{width:100%;padding:30px 20px;}.welcome-title{font-size:2rem;}}
+</style>
+</head>
+<body>
+<!-- LEFT: Welcome message -->
+<div class="left">
+  <div class="badge">&#127979; Fabtech Technical Campus, Sangola</div>
+  <div class="welcome-title">Welcome to FTC<br>Campus R&amp;D<br>Platform</div>
+  <div class="welcome-sub">The official research submission portal for FTC faculty, students and staff. Please login your details to access the platform and submit your research.</div>
+  <div class="features">
+    <div class="feat"><div class="feat-icon ic-blue">&#128216;</div><div><div class="feat-title">9 Research Categories</div><div class="feat-sub">SCI, Scopus, IEEE, Conference, Patent, Project &amp; more</div></div></div>
+    <div class="feat"><div class="feat-icon ic-gold">&#127942;</div><div><div class="feat-title">Automatic Incentive Calculation</div><div class="feat-sub">Rewards up to Rs.75,000 as per FTC R&amp;D Policy</div></div></div>
+    <div class="feat"><div class="feat-icon ic-green">&#128231;</div><div><div class="feat-title">Email Notifications</div><div class="feat-sub">Auto reply to you + notification to admin</div></div></div>
+    <div class="feat"><div class="feat-icon ic-pink">&#128100;</div><div><div class="feat-title">User Profile</div><div class="feat-sub">Your profile with photo in top-right corner</div></div></div>
+  </div>
+  <div class="stats">
+    <div><div class="stat-num">9</div><div class="stat-lbl">Categories</div></div>
+    <div><div class="stat-num">Rs.75K</div><div class="stat-lbl">Max Incentive</div></div>
+    <div><div class="stat-num">24/7</div><div class="stat-lbl">Online Access</div></div>
+  </div>
+</div>
+
+<!-- RIGHT: Login / Register form -->
+<div class="right">
+  <div class="logo">
+    <div class="logo-box">FTC</div>
+    <div><div class="logo-name">R&amp;D Portal</div><div class="logo-sub-txt">FABTECH TECHNICAL CAMPUS</div></div>
+  </div>
+  <div class="card">
+    <div id="mainPanel">
+      <div class="tabs">
+        <div class="tab active" id="tabLogin" onclick="showTab('login')">Login</div>
+        <div class="tab"       id="tabReg"   onclick="showTab('register')">Sign Up</div>
+      </div>
+      <div id="mainMsg" class="msg"></div>
+
+      <!-- LOGIN -->
+      <div class="panel active" id="pLogin">
+        <div class="panel-title">Login to your account</div>
+        <div class="panel-sub">Enter your email and password</div>
+        <div class="fg"><label>Email</label><input type="email" id="lEmail" placeholder="your@email.com"/></div>
+        <div class="fg"><label>Password</label><input type="password" id="lPass" placeholder="Your password"/></div>
+        <div class="forgot"><a onclick="showForgot()">Forgot password?</a></div>
+        <button class="btn" id="btnLogin" onclick="doLogin()">Login to Portal</button>
+      </div>
+
+      <!-- REGISTER -->
+      <div class="panel" id="pReg">
+        <div class="panel-title">Create your account</div>
+        <div class="panel-sub">Register as FTC student, faculty or staff</div>
+        <div class="fg"><label>Full Name</label><input type="text" id="rName" placeholder="e.g. Yogesh Hande"/></div>
+        <div class="fg"><label>Email Address</label><input type="email" id="rEmail" placeholder="your@email.com"/></div>
+        <div class="fg"><label>Password (min 6 chars)</label><input type="password" id="rPass" placeholder="Create a password"/></div>
+        <div class="two">
+          <div class="fg"><label>Role</label>
+            <select id="rRole">
+              <option value="STUDENT">Student</option>
+              <option value="FACULTY">Faculty</option>
+              <option value="MANAGEMENT">Management</option>
+            </select>
+          </div>
+          <div class="fg"><label>Department</label>
+            <select id="rDept">
+              <option value="">Select</option>
+              <option value="AI &amp; DS">AI &amp; DS</option>
+              <option value="CSE">CSE</option>
+              <option value="MECH">MECH</option>
+              <option value="CIVIL">CIVIL</option>
+              <option value="E&amp;TC">E&amp;TC</option>
+              <option value="ELECTRICAL">ELECTRICAL</option>
+              <option value="FE">FE</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn" id="btnReg" onclick="doRegister()">Create Account</button>
+      </div>
+    </div>
+
+    <!-- FORGOT PASSWORD -->
+    <div id="forgotPanel" style="display:none">
+      <div id="forgotMsg" class="msg"></div>
+      <span class="back-lnk" onclick="hideForgot()">&#8592; Back to Login</span>
+      <div class="panel-title">Reset Password</div>
+      <div class="panel-sub">Enter your registered email to receive a reset link</div>
+      <div class="fg"><label>Email Address</label><input type="email" id="fpEmail" placeholder="your@email.com"/></div>
+      <button class="btn" id="btnForgot" onclick="doForgot()">Send Reset Link</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// If already logged in go to portal
+if(sessionStorage.getItem('ftcUser')) location.href='/index.html';
+
+function showTab(t){
+  document.getElementById('tabLogin').classList.toggle('active', t==='login');
+  document.getElementById('tabReg').classList.toggle('active', t==='register');
+  document.getElementById('pLogin').classList.toggle('active', t==='login');
+  document.getElementById('pReg').classList.toggle('active', t==='register');
+  hide('mainMsg');
+}
+function showForgot(){ document.getElementById('mainPanel').style.display='none'; document.getElementById('forgotPanel').style.display='block'; hide('forgotMsg'); }
+function hideForgot(){ document.getElementById('forgotPanel').style.display='none'; document.getElementById('mainPanel').style.display='block'; }
+function showMsg(id,txt,isErr){ var e=document.getElementById(id); e.textContent=txt; e.className='msg '+(isErr?'er':'ok'); e.style.display='block'; }
+function hide(id){ document.getElementById(id).style.display='none'; }
+
+async function doLogin(){
+  var email=document.getElementById('lEmail').value.trim();
+  var pass=document.getElementById('lPass').value.trim();
+  if(!email||!pass){showMsg('mainMsg','Please enter email and password.',true);return;}
+  var btn=document.getElementById('btnLogin');
+  btn.disabled=true; btn.innerHTML='<span class="spin"></span> Logging in...';
+  try{
+    var fd=new FormData(); fd.append('email',email); fd.append('password',pass);
+    var r=await fetch('/api/auth/login',{method:'POST',body:fd});
+    var j=await r.json();
+    if(j.success){
+      sessionStorage.setItem('ftcUser',JSON.stringify(j.data));
+      showMsg('mainMsg','Login successful! Loading portal...',false);
+      setTimeout(()=>location.href='/index.html',600);
+    } else { showMsg('mainMsg',j.message,true); }
+  } catch(e){ showMsg('mainMsg','Connection error: '+e.message,true); }
+  finally{ btn.disabled=false; btn.textContent='Login to Portal'; }
+}
+
+async function doRegister(){
+  var name=document.getElementById('rName').value.trim();
+  var email=document.getElementById('rEmail').value.trim();
+  var pass=document.getElementById('rPass').value.trim();
+  var role=document.getElementById('rRole').value;
+  var dept=document.getElementById('rDept').value;
+  if(!name||!email||!pass){showMsg('mainMsg','Please fill all required fields.',true);return;}
+  if(!email.includes('@')){showMsg('mainMsg','Enter a valid email address.',true);return;}
+  if(pass.length<6){showMsg('mainMsg','Password must be at least 6 characters.',true);return;}
+  var btn=document.getElementById('btnReg');
+  btn.disabled=true; btn.innerHTML='<span class="spin"></span> Creating account...';
+  try{
+    var fd=new FormData(); fd.append('fullName',name); fd.append('email',email);
+    fd.append('password',pass); fd.append('role',role); fd.append('department',dept);
+    var r=await fetch('/api/auth/register',{method:'POST',body:fd});
+    var j=await r.json();
+    if(j.success){
+      showMsg('mainMsg','Account created! Please login now.',false);
+      setTimeout(()=>showTab('login'),1200);
+    } else { showMsg('mainMsg',j.message,true); }
+  } catch(e){ showMsg('mainMsg','Connection error: '+e.message,true); }
+  finally{ btn.disabled=false; btn.textContent='Create Account'; }
+}
+
+async function doForgot(){
+  var email=document.getElementById('fpEmail').value.trim();
+  if(!email){showMsg('forgotMsg','Please enter your email.',true);return;}
+  var btn=document.getElementById('btnForgot');
+  btn.disabled=true; btn.innerHTML='<span class="spin"></span> Sending...';
+  try{
+    var fd=new FormData(); fd.append('email',email);
+    var r=await fetch('/api/auth/forgot-password',{method:'POST',body:fd});
+    var j=await r.json();
+    showMsg('forgotMsg',j.message,!j.success);
+  } catch(e){ showMsg('forgotMsg','Error: '+e.message,true); }
+  finally{ btn.disabled=false; btn.textContent='Send Reset Link'; }
+}
+
+document.addEventListener('keydown',function(e){
+  if(e.key!=='Enter')return;
+  if(document.getElementById('forgotPanel').style.display!=='none') doForgot();
+  else if(document.getElementById('pLogin').classList.contains('active')) doLogin();
+  else doRegister();
+});
+</script>
+</body>
+</html>

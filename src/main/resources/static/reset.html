@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reset Password - FTC Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#08090f;--s1:#0f1117;--brd:#1e2840;--acc:#4f7df3;--grn:#34d399;--red:#f87171;--txt:#dde4f0;--mut:#5a6a8a;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;display:flex;align-items:center;justify-content:center;}
+.wrap{width:100%;max-width:400px;padding:20px;}
+.logo{text-align:center;margin-bottom:24px;}
+.logo-box{width:46px;height:46px;background:linear-gradient(135deg,var(--acc),#2563eb);border-radius:11px;display:inline-flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;color:#fff;font-size:.9rem;margin-bottom:10px;}
+.logo-t{font-family:'Syne',sans-serif;font-weight:800;font-size:1.2rem;}
+.card{background:var(--s1);border:1px solid var(--brd);border-radius:16px;padding:26px;}
+.title{font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;margin-bottom:4px;}
+.sub{color:var(--mut);font-size:.8rem;margin-bottom:20px;}
+.fg{margin-bottom:14px;}
+label{display:block;font-size:.68rem;font-weight:700;color:var(--mut);letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px;}
+input{width:100%;background:var(--bg);border:1px solid var(--brd);border-radius:9px;padding:10px 12px;color:var(--txt);font-family:'DM Sans',sans-serif;font-size:.86rem;outline:none;transition:border-color .2s;}
+input:focus{border-color:var(--acc);}
+.btn{width:100%;padding:11px;background:linear-gradient(135deg,var(--acc),#2563eb);border:none;border-radius:9px;color:#fff;font-family:'Syne',sans-serif;font-weight:700;font-size:.88rem;cursor:pointer;}
+.btn:hover{opacity:.9;}
+.msg{padding:9px 12px;border-radius:8px;font-size:.8rem;margin-bottom:12px;display:none;}
+.msg.ok{background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.25);color:var(--grn);}
+.msg.er{background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.25);color:var(--red);}
+.back{text-align:center;margin-top:14px;font-size:.8rem;color:var(--mut);}
+.back a{color:var(--acc);text-decoration:none;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="logo">
+    <div class="logo-box">FTC</div>
+    <div class="logo-t">Reset Password</div>
+  </div>
+  <div class="card">
+    <div id="msg" class="msg"></div>
+    <div class="title">Set New Password</div>
+    <div class="sub">Enter your new password below</div>
+    <div class="fg"><label>New Password</label><input type="password" id="np" placeholder="Min 6 characters"/></div>
+    <div class="fg"><label>Confirm Password</label><input type="password" id="cp" placeholder="Repeat password"/></div>
+    <button class="btn" onclick="doReset()">Reset Password</button>
+  </div>
+  <div class="back"><a href="/login.html">Back to Login</a></div>
+</div>
+<script>
+function getToken(){ return new URLSearchParams(window.location.search).get('token')||''; }
+async function doReset(){
+  var np=document.getElementById('np').value.trim(), cp=document.getElementById('cp').value.trim();
+  if(!np||!cp){showMsg('Please fill both fields.',true);return;}
+  if(np!==cp){showMsg('Passwords do not match.',true);return;}
+  if(np.length<6){showMsg('Password must be at least 6 characters.',true);return;}
+  var token=getToken();
+  if(!token){showMsg('Invalid reset link.',true);return;}
+  try{
+    var fd=new FormData(); fd.append('token',token); fd.append('newPassword',np);
+    var res=await fetch('/api/auth/reset-password',{method:'POST',body:fd});
+    var j=await res.json();
+    showMsg(j.message,!j.success);
+    if(j.success) setTimeout(function(){window.location.href='/login.html';},2000);
+  }catch(e){showMsg('Error: '+e.message,true);}
+}
+function showMsg(t,isErr){var e=document.getElementById('msg');e.textContent=t;e.className='msg '+(isErr?'er':'ok');e.style.display='block';}
+</script>
+</body>
+</html>
